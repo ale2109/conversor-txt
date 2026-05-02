@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor de Facturas a TXT</title>
+    <title>Conversor ARCA/AFIP → iTRAFFIC (Fac_prov)</title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -13,7 +13,7 @@
             margin: 0;
             padding: 20px;
         }
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 1300px; margin: 0 auto; }
         .card {
             background: white;
             border-radius: 20px;
@@ -23,48 +23,92 @@
         .header {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
         }
-        .header h1 { margin: 0; font-size: 28px; }
-        .header p { margin: 10px 0 0; opacity: 0.9; }
-        .content { padding: 30px; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header p { margin: 8px 0 0; opacity: 0.9; font-size: 14px; }
+        .content { padding: 25px; }
         .upload-area {
             border: 3px dashed #667eea;
             border-radius: 15px;
-            padding: 40px;
+            padding: 35px;
             text-align: center;
             background: #f8f9ff;
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .upload-area:hover { border-color: #764ba2; background: #f0f2ff; }
-        .file-info {
-            background: #e3f2fd;
+        .upload-area:hover { border-color: #28a745; background: #f0f2ff; }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5a67d8; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-success:hover { background: #218838; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .config-panel {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .config-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .config-field {
+            flex: 1;
+            min-width: 180px;
+        }
+        .config-field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        .config-field input, .config-field select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .preview {
+            background: #1e1e1e;
+            color: #d4d4d4;
             border-radius: 10px;
             padding: 15px;
-            margin-top: 20px;
-            display: none;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            overflow-x: auto;
+            max-height: 400px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
-        .file-info.show { display: block; }
         .stats {
             display: flex;
             gap: 15px;
-            margin-top: 20px;
+            margin: 15px 0;
             flex-wrap: wrap;
         }
         .stat-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 15px 25px;
+            padding: 12px 20px;
             border-radius: 10px;
-            flex: 1;
-            min-width: 150px;
             text-align: center;
         }
-        .stat-card .number { font-size: 32px; font-weight: bold; }
-        .stat-card .label { font-size: 12px; opacity: 0.9; }
-        .preview-area { margin-top: 30px; }
+        .stat-card .number { font-size: 28px; font-weight: bold; }
+        .alert { padding: 12px; border-radius: 8px; margin-bottom: 15px; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-error { background: #f8d7da; color: #721c24; }
+        .hidden { display: none; }
         .preview-header {
             display: flex;
             justify-content: space-between;
@@ -73,305 +117,390 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .preview-header h3 { margin: 0; color: #333; }
-        .btn {
-            padding: 10px 20px;
-            border: none;
+        footer { text-align: center; padding: 15px; color: rgba(255,255,255,0.6); font-size: 11px; }
+        .example-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 13px;
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
         }
-        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .btn-primary:hover { transform: translateY(-2px); }
-        .btn-success { background: #28a745; color: white; }
-        .btn-success:hover { background: #218838; }
-        .btn-secondary { background: #6c757d; color: white; }
-        .preview {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            border-radius: 10px;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            overflow-x: auto;
-            max-height: 400px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        .alert { padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; }
-        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-        .hidden { display: none; }
-        footer { text-align: center; padding: 20px; color: rgba(255,255,255,0.7); font-size: 12px; }
-        @media (max-width: 768px) { .content { padding: 20px; } .stats { flex-direction: column; } }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
             <div class="header">
-                <h1>📄 Conversor de Facturas a TXT</h1>
-                <p>Transforma tu archivo Excel/CSV al formato requerido</p>
+                <h1>📄 Conversor ARCA/AFIP → iTRAFFIC</h1>
+                <p>Genera archivo compatible con el importador "Fac_prov"</p>
             </div>
             <div class="content">
+                <div class="example-box">
+                    <strong>📌 Formato esperado por iTRAFFIC:</strong><br>
+                    • <strong>2 filas por factura</strong>: Fila 1 (EsFactura=SI) = Cabecera, Fila 2 (EsFactura=NO) = Detalle con GAS<br>
+                    • Completar <strong>CENTROCOSTO</strong> y <strong>CUENTA</strong> (consultar en el sistema)
+                </div>
+
                 <div id="uploadArea" class="upload-area">
-                    <div style="font-size:60px; margin-bottom:20px;">📁</div>
-                    <h3>Arrastra o selecciona tu archivo</h3>
-                    <p style="color:#666; margin-top:10px;">Formatos: .xlsx, .xls, .csv</p>
-                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none;">
-                    <button class="btn btn-primary" id="selectFileBtn" style="margin-top:20px;">📂 Seleccionar archivo</button>
+                    <div style="font-size:50px; margin-bottom:15px;">📁</div>
+                    <h3>Arrastrá o seleccioná tu Excel</h3>
+                    <p style="color:#666;">Formato: .xlsx (descarga de ARCA/AFIP)</p>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none;">
+                    <button class="btn btn-primary" id="selectFileBtn" style="margin-top:15px;">📂 Seleccionar archivo</button>
                 </div>
-                <div id="fileInfo" class="file-info">
-                    <div id="statsContainer" class="stats"></div>
+
+                <div id="configPanel" class="config-panel hidden">
+                    <h4 style="margin-top:0;">⚙️ Configuración para GASTOS (GAS)</h4>
+                    <div class="config-row">
+                        <div class="config-field">
+                            <label>🏷️ CENTROCOSTO *</label>
+                            <input type="text" id="centroCosto" placeholder="Ej: ADMIN, 0000, GENERAL" value="ADMIN">
+                            <small style="font-size:10px;">Código existente en el sistema</small>
+                        </div>
+                        <div class="config-field">
+                            <label>📊 CUENTA *</label>
+                            <input type="text" id="cuenta" placeholder="Ej: 310000, 510000" value="310000">
+                            <small style="font-size:10px;">Cuenta contable para gastos</small>
+                        </div>
+                    </div>
                 </div>
+
+                <div id="stats" class="stats hidden"></div>
                 <div id="alertContainer"></div>
-                <div id="previewArea" class="preview-area hidden">
+
+                <div id="previewArea" class="hidden">
                     <div class="preview-header">
-                        <h3>📋 Vista previa del TXT</h3>
+                        <h3>📋 TXT generado (formato Fac_prov)</h3>
                         <div>
                             <button id="copyBtn" class="btn btn-secondary">📋 Copiar</button>
                             <button id="downloadBtn" class="btn btn-success">💾 Descargar TXT</button>
-                            <button id="resetBtn" class="btn btn-secondary">🔄 Limpiar</button>
                         </div>
                     </div>
                     <div id="preview" class="preview"></div>
                 </div>
             </div>
         </div>
-        <footer>Procesamiento local en tu navegador - Sin envío de datos</footer>
+        <footer>Los datos se procesan localmente - No se envían a ningún servidor</footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script>
-        const REQUIRED_COLUMNS = [
-            'FECHA', 'COD_OPER', 'LETRA', 'TIPO', 'NUMERO_FAC', 'RVA',
-            'MONEDA', 'MONTO', 'IVATASA1', 'IVATASA2', 'PLANNING',
-            'CENTROCOSTO', 'CUENTA', 'DESCRIP', 'IVA_GAS_105', 'IVATASA27',
-            'RETENIB', 'RETENGAN', 'RETENIVA', 'PERCEP_IB', 'PERCEP_GANAN',
-            'PERCEP_IVA', 'PERCEP_INT', 'NO_GRAVADO', 'EXENTO'
+        // Columnas exactas que espera iTRAFFIC
+        const COLUMNAS = [
+            'EsFactura', 'CodigoFactura', 'RvaOGasto', 'FECHA', 'COD_OPER', 'LETRA', 'TIPO',
+            'NUMERO_FAC', 'RVA', 'MONEDA', 'MONTO', 'GRAVADO21', 'GRAVADO105', 'PLANNING',
+            'CENTROCOSTO', 'CUENTA', 'DESCRIP', 'GRAVADOGAS105', 'GRAVADO27', 'RETENIB',
+            'RETENGAN', 'RETENIVA', 'PERCEP_IB', 'PERCEP_GANAN', 'PERCEP_IVA', 'PERCEP_INT',
+            'NO_GRAVADO', 'EXENTO'
         ];
 
-        let currentData = null;
+        let datosProcesados = null;
 
-        function showAlert(msg, type = 'success') {
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type}`;
-            alert.textContent = msg;
-            alertContainer.appendChild(alert);
-            setTimeout(() => alert.remove(), 5000);
+        function mostrarAlerta(msg, tipo) {
+            const contenedor = document.getElementById('alertContainer');
+            const alerta = document.createElement('div');
+            alerta.className = `alert alert-${tipo}`;
+            alerta.textContent = msg;
+            contenedor.appendChild(alerta);
+            setTimeout(() => alerta.remove(), 5000);
         }
 
-        function formatDate(val) {
-            if (!val && val !== 0) return '';
-            if (typeof val === 'number' && val > 40000) {
-                const d = XLSX.SSF.parse_date_code(val);
-                return `${String(d.d).padStart(2,'0')}/${String(d.m).padStart(2,'0')}/${d.y}`;
+        function limpiarNumero(valor) {
+            if (valor === null || valor === undefined || valor === '') return 0;
+            if (typeof valor === 'number') return Math.round(valor * 100) / 100;
+            let str = String(valor).trim();
+            str = str.replace(/\./g, '');
+            str = str.replace(',', '.');
+            str = str.replace(/[^\d.-]/g, '');
+            let num = parseFloat(str);
+            return isNaN(num) ? 0 : Math.round(num * 100) / 100;
+        }
+
+        function formatearFecha(valor) {
+            if (!valor) return '';
+            if (typeof valor === 'number' && valor > 40000) {
+                let fecha = XLSX.SSF.parse_date_code(valor);
+                return `${String(fecha.d).padStart(2, '0')}/${String(fecha.m).padStart(2, '0')}/${fecha.y}`;
             }
-            let s = String(val).trim().replace(/[-\.]/g, '/');
-            const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-            if (m) return `${m[1].padStart(2,'0')}/${m[2].padStart(2,'0')}/${m[3]}`;
-            return s;
-        }
-
-        function cleanNum(val) {
-            if (val === null || val === undefined || val === '') return 0;
-            if (typeof val === 'number') return val;
-            let s = String(val).replace(',', '.').replace(/[^\d.-]/g, '');
-            const n = parseFloat(s);
-            return isNaN(n) ? 0 : n;
-        }
-
-        function findCol(headers, names) {
-            for (let i = 0; i < headers.length; i++) {
-                const h = String(headers[i] || '').trim().toLowerCase();
-                for (const n of names) {
-                    if (h === n.toLowerCase()) return i;
-                }
+            let str = String(valor).trim();
+            let partes = str.split('/');
+            if (partes.length === 3 && partes[2].length === 4) {
+                return `${partes[0].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[2]}`;
             }
-            return -1;
+            partes = str.split('-');
+            if (partes.length === 3 && partes[0].length === 4) {
+                return `${partes[2].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[0]}`;
+            }
+            return str;
         }
 
-        function transformData(jsonData) {
-            if (!jsonData || jsonData.length < 2) return [];
+        function extraerFacturas(jsonData) {
+            // Buscar la fila de encabezados
+            let headerRow = null;
+            let headerIndex = -1;
             
-            // Buscar fila de headers
-            let hIdx = 0;
-            for (let i = 0; i < Math.min(15, jsonData.length); i++) {
-                const r = jsonData[i];
-                if (r && r.some(c => String(c||'').toLowerCase().includes('fecha'))) {
-                    hIdx = i;
+            for (let i = 0; i < Math.min(30, jsonData.length); i++) {
+                const fila = jsonData[i];
+                if (!fila) continue;
+                const textoFila = fila.map(c => String(c || '').toLowerCase()).join(' ');
+                if (textoFila.includes('fecha') && textoFila.includes('tipo') && textoFila.includes('imp. total')) {
+                    headerRow = fila;
+                    headerIndex = i;
                     break;
                 }
             }
             
-            const headers = jsonData[hIdx].map(h => String(h||'').trim());
-            const rows = jsonData.slice(hIdx + 1).filter(r => 
-                r && r.some(c => c !== null && c !== undefined && c !== '' && c !== 0)
-            );
+            if (!headerRow) {
+                mostrarAlerta('No se encontraron los encabezados (Fecha, Tipo, Imp. Total)', 'error');
+                return [];
+            }
             
-            // Mapeo de columnas
-            const ci = {
-                fecha: findCol(headers, ['Fecha', 'FECHA']),
-                tipo: findCol(headers, ['Tipo', 'TIPO']),
-                pv: findCol(headers, ['Punto de Venta']),
-                num: findCol(headers, ['Número Desde']),
-                moneda: findCol(headers, ['Moneda']),
-                total: findCol(headers, ['Imp. Total', 'MONTO']),
-                iva21: findCol(headers, ['IVA 21%']),
-                iva10_5: findCol(headers, ['IVA 10,5%', 'IVA 10.5%']),
-                iva2_5: findCol(headers, ['IVA 2,5%', 'IVA 2.5%']),
-                iva27: findCol(headers, ['IVA 27%']),
-                noGrav: findCol(headers, ['Neto No Gravado']),
-                exento: findCol(headers, ['Op. Exentas']),
-                denom: findCol(headers, ['Denominación Emisor', 'DESCRIP'])
+            // Mapear columnas
+            const col = {
+                fecha: headerRow.findIndex(c => String(c || '').toLowerCase() === 'fecha'),
+                tipo: headerRow.findIndex(c => String(c || '').toLowerCase() === 'tipo'),
+                pv: headerRow.findIndex(c => String(c || '').toLowerCase().includes('punto de venta')),
+                numDesde: headerRow.findIndex(c => String(c || '').toLowerCase().includes('número desde')),
+                iva21: headerRow.findIndex(c => String(c || '').toLowerCase() === 'iva 21%'),
+                neto21: headerRow.findIndex(c => String(c || '').toLowerCase() === 'neto grav. iva 21%'),
+                exento: headerRow.findIndex(c => String(c || '').toLowerCase() === 'op. exentas'),
+                noGrav: headerRow.findIndex(c => String(c || '').toLowerCase() === 'neto no gravado'),
+                total: headerRow.findIndex(c => String(c || '').toLowerCase() === 'imp. total'),
+                denominacion: headerRow.findIndex(c => String(c || '').toLowerCase() === 'denominación emisor')
             };
             
-            return rows.map(row => {
-                const tipo = row[ci.tipo] ? String(row[ci.tipo]) : '';
-                let codOper = 1, letra = 'A', tipoDoc = 'FAC';
-                
-                if (tipo.match(/^(\d+)/)) codOper = parseInt(tipo.match(/^(\d+)/)[1]);
-                if (tipo.includes('Factura A')) letra = 'A';
-                else if (tipo.includes('Factura B')) letra = 'B';
-                else if (tipo.includes('Factura C')) letra = 'C';
-                if (tipo.includes('Nota de Crédito')) tipoDoc = 'NC';
-                
-                const pv = row[ci.pv] ? String(row[ci.pv]).padStart(4, '0') : '';
-                const num = row[ci.num] ? String(row[ci.num]).padStart(8, '0') : '';
-                
-                return {
-                    FECHA: ci.fecha >= 0 ? formatDate(row[ci.fecha]) : '',
-                    COD_OPER: codOper,
-                    LETRA: letra,
-                    TIPO: tipoDoc,
-                    NUMERO_FAC: (pv && num && pv !== '0000') ? `${pv}-${num}` : '',
-                    RVA: 0,
-                    MONEDA: ci.moneda >= 0 ? (row[ci.moneda] || 'ARS') : 'ARS',
-                    MONTO: ci.total >= 0 ? cleanNum(row[ci.total]) : 0,
-                    IVATASA1: ci.iva21 >= 0 ? cleanNum(row[ci.iva21]) : 0,
-                    IVATASA2: ci.iva10_5 >= 0 ? cleanNum(row[ci.iva10_5]) : 0,
-                    PLANNING: 0,
-                    CENTROCOSTO: 0,
-                    CUENTA: 0,
-                    DESCRIP: ci.denom >= 0 ? (row[ci.denom] || '') : '',
-                    IVA_GAS_105: ci.iva2_5 >= 0 ? cleanNum(row[ci.iva2_5]) : 0,
-                    IVATASA27: ci.iva27 >= 0 ? cleanNum(row[ci.iva27]) : 0,
-                    RETENIB: 0,
-                    RETENGAN: 0,
-                    RETENIVA: 0,
-                    PERCEP_IB: 0,
-                    PERCEP_GANAN: 0,
-                    PERCEP_IVA: 0,
-                    PERCEP_INT: 0,
-                    NO_GRAVADO: ci.noGrav >= 0 ? cleanNum(row[ci.noGrav]) : 0,
-                    EXENTO: ci.exento >= 0 ? cleanNum(row[ci.exento]) : 0
-                };
-            });
-        }
-
-        function generateTXT(data) {
-            const lines = [REQUIRED_COLUMNS.join(';') + ';'];
-            data.forEach(row => {
-                lines.push(REQUIRED_COLUMNS.map(col => row[col] ?? '').join(';') + ';');
-            });
-            return lines.join('\n');
-        }
-
-        function updateStats(data) {
-            const total = data.length;
-            const monto = data.reduce((s, r) => s + (parseFloat(r.MONTO) || 0), 0);
-            const iva1 = data.reduce((s, r) => s + (parseFloat(r.IVATASA1) || 0), 0);
-            const iva27 = data.reduce((s, r) => s + (parseFloat(r.IVATASA27) || 0), 0);
+            const facturas = [];
+            const filas = jsonData.slice(headerIndex + 1);
             
-            statsContainer.innerHTML = `
-                <div class="stat-card">
-                    <div class="number">${total}</div>
-                    <div class="label">Facturas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="number">$${monto.toLocaleString('es-AR', {minimumFractionDigits: 2})}</div>
-                    <div class="label">Total</div>
-                </div>
-                <div class="stat-card">
-                    <div class="number">$${iva1.toLocaleString('es-AR', {minimumFractionDigits: 2})}</div>
-                    <div class="label">IVA 21%</div>
-                </div>
-            `;
+            for (const fila of filas) {
+                if (!fila || fila.length === 0) continue;
+                
+                const fecha = fila[col.fecha];
+                if (!fecha) continue;
+                
+                const tipoStr = String(fila[col.tipo] || '');
+                if (!tipoStr.includes('Factura') && !tipoStr.includes('Nota')) continue;
+                
+                // Determinar letra y tipo
+                let letra = 'A';
+                let tipoDoc = 'FAC';
+                if (tipoStr.includes('Factura B')) letra = 'B';
+                if (tipoStr.includes('Factura C')) letra = 'C';
+                if (tipoStr.includes('Nota de Crédito')) tipoDoc = 'NC';
+                if (tipoStr.includes('Nota de Débito')) tipoDoc = 'ND';
+                
+                // Número de factura
+                const pv = col.pv >= 0 ? String(fila[col.pv] || '').trim() : '';
+                const num = col.numDesde >= 0 ? String(fila[col.numDesde] || '').trim() : '';
+                let numeroFac = '';
+                if (pv && num && pv !== '0') {
+                    numeroFac = `${pv.padStart(4, '0')}-${num.padStart(8, '0')}`;
+                } else if (num) {
+                    numeroFac = num;
+                }
+                
+                const montoTotal = col.total >= 0 ? limpiarNumero(fila[col.total]) : 0;
+                const iva21 = col.iva21 >= 0 ? limpiarNumero(fila[col.iva21]) : 0;
+                const exento = col.exento >= 0 ? limpiarNumero(fila[col.exento]) : 0;
+                const noGravado = col.noGrav >= 0 ? limpiarNumero(fila[col.noGrav]) : 0;
+                const descrip = col.denominacion >= 0 ? String(fila[col.denominacion] || '') : '';
+                
+                if (numeroFac && montoTotal > 0) {
+                    facturas.push({
+                        FECHA: formatearFecha(fecha),
+                        COD_OPER: '1',
+                        LETRA: letra,
+                        TIPO: tipoDoc,
+                        NUMERO_FAC: numeroFac,
+                        MONEDA: 'P',
+                        MONTO: montoTotal,
+                        GRAVADO21: iva21,
+                        GRAVADO105: 0,
+                        GRAVADO27: 0,
+                        GRAVADOGAS105: 0,
+                        NO_GRAVADO: noGravado,
+                        EXENTO: exento,
+                        DESCRIP: descrip
+                    });
+                }
+            }
+            
+            return facturas;
         }
 
-        function processFile(file) {
+        function generarTXT(facturas, centroCosto, cuenta) {
+            const lineas = [COLUMNAS.join(';') + ';'];
+            
+            facturas.forEach((factura, idx) => {
+                const codigoFactura = (idx + 1).toString();
+                
+                // FILA 1: CABECERA (SI)
+                const header = {};
+                COLUMNAS.forEach(col => {
+                    switch(col) {
+                        case 'EsFactura': header[col] = 'SI'; break;
+                        case 'CodigoFactura': header[col] = codigoFactura; break;
+                        case 'RvaOGasto': header[col] = ''; break;
+                        case 'FECHA': header[col] = factura.FECHA; break;
+                        case 'COD_OPER': header[col] = factura.COD_OPER; break;
+                        case 'LETRA': header[col] = factura.LETRA; break;
+                        case 'TIPO': header[col] = factura.TIPO; break;
+                        case 'NUMERO_FAC': header[col] = factura.NUMERO_FAC; break;
+                        case 'RVA': header[col] = ''; break;
+                        case 'MONEDA': header[col] = factura.MONEDA; break;
+                        case 'MONTO': header[col] = factura.MONTO.toFixed(2).replace('.', ','); break;
+                        case 'GRAVADO21': header[col] = factura.GRAVADO21.toFixed(2).replace('.', ','); break;
+                        case 'GRAVADO105': header[col] = '0,00'; break;
+                        case 'PLANNING': header[col] = '0'; break;
+                        case 'CENTROCOSTO': header[col] = ''; break;
+                        case 'CUENTA': header[col] = ''; break;
+                        case 'DESCRIP': header[col] = factura.DESCRIP; break;
+                        case 'GRAVADOGAS105': header[col] = '0,00'; break;
+                        case 'GRAVADO27': header[col] = '0,00'; break;
+                        case 'RETENIB': header[col] = '0,00'; break;
+                        case 'RETENGAN': header[col] = '0,00'; break;
+                        case 'RETENIVA': header[col] = '0,00'; break;
+                        case 'PERCEP_IB': header[col] = '0,00'; break;
+                        case 'PERCEP_GANAN': header[col] = '0,00'; break;
+                        case 'PERCEP_IVA': header[col] = '0,00'; break;
+                        case 'PERCEP_INT': header[col] = '0,00'; break;
+                        case 'NO_GRAVADO': header[col] = factura.NO_GRAVADO.toFixed(2).replace('.', ','); break;
+                        case 'EXENTO': header[col] = factura.EXENTO.toFixed(2).replace('.', ','); break;
+                        default: header[col] = '';
+                    }
+                });
+                lineas.push(COLUMNAS.map(col => header[col] || '').join(';') + ';');
+                
+                // FILA 2: DETALLE (NO) - GAS
+                const detail = {};
+                COLUMNAS.forEach(col => {
+                    switch(col) {
+                        case 'EsFactura': detail[col] = 'NO'; break;
+                        case 'CodigoFactura': detail[col] = codigoFactura; break;
+                        case 'RvaOGasto': detail[col] = 'GAS'; break;
+                        case 'FECHA': detail[col] = ''; break;
+                        case 'COD_OPER': detail[col] = ''; break;
+                        case 'LETRA': detail[col] = ''; break;
+                        case 'TIPO': detail[col] = ''; break;
+                        case 'NUMERO_FAC': detail[col] = ''; break;
+                        case 'RVA': detail[col] = ''; break;
+                        case 'MONEDA': detail[col] = factura.MONEDA; break;
+                        case 'MONTO': detail[col] = factura.MONTO.toFixed(2).replace('.', ','); break;
+                        case 'GRAVADO21': detail[col] = '0,00'; break;
+                        case 'GRAVADO105': detail[col] = '0,00'; break;
+                        case 'PLANNING': detail[col] = ''; break;
+                        case 'CENTROCOSTO': detail[col] = centroCosto; break;
+                        case 'CUENTA': detail[col] = cuenta; break;
+                        case 'DESCRIP': detail[col] = `Gasto factura ${factura.NUMERO_FAC}`; break;
+                        case 'GRAVADOGAS105': detail[col] = '0,00'; break;
+                        case 'GRAVADO27': detail[col] = '0,00'; break;
+                        case 'RETENIB': detail[col] = '0,00'; break;
+                        case 'RETENGAN': detail[col] = '0,00'; break;
+                        case 'RETENIVA': detail[col] = '0,00'; break;
+                        case 'PERCEP_IB': detail[col] = '0,00'; break;
+                        case 'PERCEP_GANAN': detail[col] = '0,00'; break;
+                        case 'PERCEP_IVA': detail[col] = '0,00'; break;
+                        case 'PERCEP_INT': detail[col] = '0,00'; break;
+                        case 'NO_GRAVADO': detail[col] = '0,00'; break;
+                        case 'EXENTO': detail[col] = '0,00'; break;
+                        default: detail[col] = '';
+                    }
+                });
+                lineas.push(COLUMNAS.map(col => detail[col] || '').join(';') + ';');
+            });
+            
+            return lineas.join('\n');
+        }
+
+        function actualizarStats(facturas) {
+            const total = facturas.length;
+            const monto = facturas.reduce((s, f) => s + f.MONTO, 0);
+            const container = document.getElementById('stats');
+            container.innerHTML = `
+                <div class="stat-card"><div class="number">${total}</div><div>Facturas</div></div>
+                <div class="stat-card"><div class="number">$${monto.toLocaleString('es-AR')}</div><div>Total</div></div>
+                <div class="stat-card"><div class="number">${total * 2}</div><div>Filas TXT</div></div>
+            `;
+            container.classList.remove('hidden');
+        }
+
+        function regenerarTXT() {
+            if (!datosProcesados) return '';
+            const centro = document.getElementById('centroCosto').value || 'ADMIN';
+            const cuenta = document.getElementById('cuenta').value || '310000';
+            const txt = generarTXT(datosProcesados, centro, cuenta);
+            const lineas = txt.split('\n');
+            const maxLines = 35;
+            document.getElementById('preview').textContent = lineas.slice(0, maxLines).join('\n') + (lineas.length > maxLines ? `\n\n... y ${lineas.length - maxLines} líneas más` : '');
+            return txt;
+        }
+
+        function procesarArchivo(file) {
             if (!file) return;
+            
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
-                    const wb = XLSX.read(new Uint8Array(e.target.result), {type: 'array'});
-                    const ws = wb.Sheets[wb.SheetNames[0]];
-                    const json = XLSX.utils.sheet_to_json(ws, {header: 1, defval: ''});
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const json = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
                     
-                    const data = transformData(json);
-                    if (data.length === 0) {
-                        showAlert('No se encontraron datos válidos', 'error');
+                    const facturas = extraerFacturas(json);
+                    
+                    if (facturas.length === 0) {
+                        mostrarAlerta('No se encontraron facturas. Verificá el formato del Excel.', 'error');
                         return;
                     }
                     
-                    const txt = generateTXT(data);
-                    currentData = {txt, data, name: file.name.replace(/\.[^/.]+$/, '')};
+                    datosProcesados = facturas;
+                    document.getElementById('configPanel').classList.remove('hidden');
+                    actualizarStats(facturas);
+                    regenerarTXT();
+                    document.getElementById('previewArea').classList.remove('hidden');
+                    mostrarAlerta(`✅ ${facturas.length} facturas procesadas correctamente. Recordá verificar CENTROCOSTO y CUENTA.`, 'success');
                     
-                    preview.textContent = txt.split('\n').slice(0, 20).join('\n') + 
-                        `\n\n... ${data.length} registros totales`;
-                    previewArea.classList.remove('hidden');
-                    updateStats(data);
-                    fileInfo.classList.add('show');
-                    showAlert(`✅ ${data.length} facturas procesadas`, 'success');
                 } catch (err) {
-                    showAlert('Error: ' + err.message, 'error');
+                    mostrarAlerta('Error al leer el archivo: ' + err.message, 'error');
                 }
             };
             reader.readAsArrayBuffer(file);
         }
 
-        uploadArea.addEventListener('dragover', (e) => { 
-            e.preventDefault(); 
-            uploadArea.style.borderColor = '#28a745'; 
-        });
-        uploadArea.addEventListener('dragleave', () => { 
-            uploadArea.style.borderColor = '#667eea'; 
-        });
+        // Eventos
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = '#28a745'; });
+        uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = '#667eea'; });
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.style.borderColor = '#667eea';
-            processFile(e.dataTransfer.files[0]);
+            procesarArchivo(e.dataTransfer.files[0]);
         });
         
-        selectFileBtn.onclick = () => fileInput.click();
-        fileInput.onchange = (e) => processFile(e.target.files[0]);
+        document.getElementById('selectFileBtn').onclick = () => fileInput.click();
+        fileInput.onchange = (e) => procesarArchivo(e.target.files[0]);
         
-        copyBtn.onclick = () => {
-            if (!currentData) return;
-            navigator.clipboard.writeText(currentData.txt)
-                .then(() => showAlert('✅ Copiado al portapapeles'))
-                .catch(() => showAlert('Error al copiar', 'error'));
+        document.getElementById('centroCosto').addEventListener('input', () => regenerarTXT());
+        document.getElementById('cuenta').addEventListener('input', () => regenerarTXT());
+        
+        document.getElementById('copyBtn').onclick = () => {
+            const txt = regenerarTXT();
+            navigator.clipboard.writeText(txt).then(() => mostrarAlerta('📋 Copiado al portapapeles', 'success'));
         };
         
-        downloadBtn.onclick = () => {
-            if (!currentData) return;
-            const blob = new Blob([currentData.txt], {type: 'text/plain;charset=utf-8'});
+        document.getElementById('downloadBtn').onclick = () => {
+            const txt = regenerarTXT();
+            const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `${currentData.name}_CONVERTIDO.txt`;
+            a.href = url;
+            a.download = 'facturas_FAC_PROV.txt';
             a.click();
-            showAlert('✅ Archivo descargado');
-        };
-        
-        resetBtn.onclick = () => {
-            currentData = null;
-            fileInfo.classList.remove('show');
-            previewArea.classList.add('hidden');
-            fileInput.value = '';
-            showAlert('Todo limpio', 'success');
+            URL.revokeObjectURL(url);
+            mostrarAlerta('💾 Archivo descargado', 'success');
         };
     </script>
 </body>
