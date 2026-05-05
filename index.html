@@ -588,7 +588,7 @@
                     <div class="diff-col good">
                         <h4>✅ Formato correcto (FACTURAS.TXT)</h4>
                         <div class="diff-item"><span class="diff-icon">✓</span>
-                            <div class="diff-text"><strong>Sin encabezado.</strong> Primera línea es ya una factura.
+                            <div class="diff-text"><strong>Con encabezado.</strong> Primera línea contiene los nombres de las columnas.
                             </div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
@@ -774,6 +774,15 @@
                 11: { cod: '1', tipo: 'FAC', letra: 'C' },
                 12: { cod: '2', tipo: 'ND', letra: 'C' },
                 13: { cod: '3', tipo: 'NC', letra: 'C' },
+                // Factura M
+                195: { cod: '1', tipo: 'FAC', letra: 'M' },
+                196: { cod: '2', tipo: 'ND', letra: 'M' },
+                197: { cod: '3', tipo: 'NC', letra: 'M' },
+                // Factura de Crédito Electrónica MiPyMEs (FCE)
+                201: { cod: '1', tipo: 'FAC', letra: 'A' },
+                202: { cod: '2', tipo: 'ND', letra: 'A' },
+                203: { cod: '3', tipo: 'NC', letra: 'A' },
+                211: { cod: '1', tipo: 'FAC', letra: 'C' },
             };
             return map[t] || { cod: '1', tipo: 'FAC', letra: 'A' };
         }
@@ -857,6 +866,7 @@
                 emisor: headerRaw.findIndex(h => h.includes('denominaci') && h.includes('emisor')),
                 iva21: headerRaw.findIndex(h => h === 'iva 21%'),
                 iva105: headerRaw.findIndex(h => h === 'iva 10,5%'),
+                iva27: headerRaw.findIndex(h => h === 'iva 27%'),
                 noGrav: headerRaw.findIndex(h => h.includes('neto no gravado')),
                 exento: headerRaw.findIndex(h => h.includes('op. exentas')),
                 total: headerRaw.findIndex(h => h === 'imp. total'),
@@ -886,11 +896,12 @@
                     monto: monto,
                     iva21: idx.iva21 >= 0 ? parseNum(cells[idx.iva21]) : 0,
                     iva105: idx.iva105 >= 0 ? parseNum(cells[idx.iva105]) : 0,
+                    iva27: idx.iva27 >= 0 ? parseNum(cells[idx.iva27]) : 0,
                     noGrav: idx.noGrav >= 0 ? parseNum(cells[idx.noGrav]) : 0,
                     exento: idx.exento >= 0 ? parseNum(cells[idx.exento]) : 0,
                     descrip: idx.emisor >= 0 ? cells[idx.emisor].replace(/"/g, '').trim() : '',
                     rva: '0', moneda: 'ARS', planning: '', centroCosto: '', cuenta: '',
-                    ivaGas105: 0, iva27: 0, retenIb: 0, retenGan: 0, retenIva: 0,
+                    ivaGas105: 0, retenIb: 0, retenGan: 0, retenIva: 0,
                     percepIb: 0, percepGanan: 0, percepIva: 0, percepInt: 0
                 });
             }
@@ -975,16 +986,19 @@
         }
 
         function generateTxt(rows) {
-            return rows.map(r => buildLine(r)).join('\r\n');
+            const header = 'FECHA;COD_OPER;LETRA;TIPO;NUMERO_FAC;RVA;MONEDA;MONTO;IVATASA1;IVATASA2;PLANNING;CENTROCOSTO;CUENTA;DESCRIP;IVA_GAS_105;IVATASA27;RETENIB;RETENGAN;RETENIVA;PERCEP_IB;PERCEP_GANAN;PERCEP_IVA;PERCEP_INT;NO_GRAVADO;EXENTO;';
+            const dataLines = rows.map(r => buildLine(r)).join('\r\n');
+            return header + '\r\n' + dataLines;
         }
 
         function validateTxt(txt, rows) {
             const lines = txt.split(/\r?\n/).filter(l => l.trim() !== '');
             const checks = [];
             const firstLine = lines[0] || '';
-            const startsWithDate = /^\d{2}\/\d{2}\/\d{4}/.test(firstLine);
-            checks.push({ rule: 'Sin encabezado', expected: 'Primera línea = datos', result: startsWithDate ? 'OK' : 'Tiene encabezado', ok: startsWithDate });
-            checks.push({ rule: 'Líneas totales', expected: `${rows.length}`, result: `${lines.length}`, ok: lines.length === rows.length });
+            const headerExpected = 'FECHA;COD_OPER;LETRA;TIPO;NUMERO_FAC;RVA;MONEDA;MONTO;IVATASA1;IVATASA2;PLANNING;CENTROCOSTO;CUENTA;DESCRIP;IVA_GAS_105;IVATASA27;RETENIB;RETENGAN;RETENIVA;PERCEP_IB;PERCEP_GANAN;PERCEP_IVA;PERCEP_INT;NO_GRAVADO;EXENTO;';
+            const hasHeader = firstLine.trim() === headerExpected.trim();
+            checks.push({ rule: 'Con encabezado', expected: 'Nombres de columnas en línea 1', result: hasHeader ? 'OK' : 'Encabezado incorrecto o ausente', ok: hasHeader });
+            checks.push({ rule: 'Líneas totales', expected: `${rows.length + 1}`, result: `${lines.length}`, ok: lines.length === (rows.length + 1) });
             const wrongFields = lines.filter(l => l.split(';').length !== 26);
             checks.push({ rule: 'Campos por línea = 26', expected: '26 en todas', result: wrongFields.length === 0 ? '26 en todas ✓' : `${wrongFields.length} líneas con campo incorrecto`, ok: wrongFields.length === 0 });
             const hasComma = lines.some(l => {
