@@ -882,7 +882,7 @@
                     codOper: tipoInfo.cod,
                     letra: tipoInfo.letra,
                     tipo: tipoInfo.tipo,
-                    numeroFac: fmtNumFac(pv, num),
+                    numeroFac: parseInt(num).toString(),
                     monto: monto,
                     iva21: idx.iva21 >= 0 ? parseNum(cells[idx.iva21]) : 0,
                     iva105: idx.iva105 >= 0 ? parseNum(cells[idx.iva105]) : 0,
@@ -912,12 +912,15 @@
                 const monto = parseNum(cells[7]);
                 if (!monto) continue;
 
+                const numFacRaw = cells[4].trim();
+                const numFac = numFacRaw.includes('-') ? numFacRaw.split('-')[1] : numFacRaw;
+
                 rows.push({
                     fecha: cells[0].trim(),
                     codOper: cells[1].trim(),
                     letra: cells[2].trim(),
                     tipo: cells[3].trim(),
-                    numeroFac: cells[4].trim(),
+                    numeroFac: parseInt(numFac).toString(),
                     monto: monto,
                     iva21: parseNum(cells[8]),
                     iva105: parseNum(cells[9]),
