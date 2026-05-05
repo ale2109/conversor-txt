@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,11 @@
             --sans: 'IBM Plex Sans', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: var(--sans);
@@ -49,6 +54,7 @@
             border-radius: 16px;
             margin-bottom: 20px;
         }
+
         .logo-mark {
             width: 52px;
             height: 52px;
@@ -60,6 +66,7 @@
             justify-content: center;
             font-size: 24px;
         }
+
         header h1 {
             font-size: 20px;
             font-weight: 700;
@@ -67,17 +74,20 @@
             line-height: 1.2;
             margin-bottom: 4px;
         }
+
         header p {
             font-size: 13px;
             color: var(--muted);
             line-height: 1.5;
         }
+
         .badge-row {
             display: flex;
             gap: 8px;
             margin-top: 10px;
             flex-wrap: wrap;
         }
+
         .badge {
             font-family: var(--mono);
             font-size: 10px;
@@ -86,9 +96,24 @@
             font-weight: 600;
             letter-spacing: 0.5px;
         }
-        .badge-blue { background: rgba(79,142,247,.18); color: var(--accent); border: 1px solid rgba(79,142,247,.3); }
-        .badge-green { background: rgba(45,212,167,.15); color: var(--accent2); border: 1px solid rgba(45,212,167,.3); }
-        .badge-orange { background: rgba(245,166,35,.15); color: var(--warn); border: 1px solid rgba(245,166,35,.3); }
+
+        .badge-blue {
+            background: rgba(79, 142, 247, .18);
+            color: var(--accent);
+            border: 1px solid rgba(79, 142, 247, .3);
+        }
+
+        .badge-green {
+            background: rgba(45, 212, 167, .15);
+            color: var(--accent2);
+            border: 1px solid rgba(45, 212, 167, .3);
+        }
+
+        .badge-orange {
+            background: rgba(245, 166, 35, .15);
+            color: var(--warn);
+            border: 1px solid rgba(245, 166, 35, .3);
+        }
 
         /* ── DIFF PANEL ── */
         .diff-panel {
@@ -98,6 +123,7 @@
             margin-bottom: 20px;
             overflow: hidden;
         }
+
         .panel-header {
             display: flex;
             align-items: center;
@@ -109,17 +135,36 @@
             cursor: pointer;
             user-select: none;
         }
-        .panel-header:hover { background: rgba(255,255,255,.03); }
-        .panel-toggle { margin-left: auto; color: var(--muted); font-size: 11px; }
-        .panel-body { padding: 20px; }
-        .panel-body.collapsed { display: none; }
+
+        .panel-header:hover {
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .panel-toggle {
+            margin-left: auto;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .panel-body {
+            padding: 20px;
+        }
+
+        .panel-body.collapsed {
+            display: none;
+        }
 
         .diff-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
         }
-        @media(max-width: 700px) { .diff-grid { grid-template-columns: 1fr; } }
+
+        @media(max-width: 700px) {
+            .diff-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
         .diff-col h4 {
             font-size: 11px;
@@ -130,24 +175,42 @@
             padding-bottom: 8px;
             border-bottom: 1px solid var(--border);
         }
-        .diff-col.bad h4 { color: var(--danger); }
-        .diff-col.good h4 { color: var(--success); }
+
+        .diff-col.bad h4 {
+            color: var(--danger);
+        }
+
+        .diff-col.good h4 {
+            color: var(--success);
+        }
 
         .diff-item {
             display: flex;
             gap: 10px;
             align-items: flex-start;
             padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,.04);
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
             font-size: 12.5px;
         }
-        .diff-item:last-child { border-bottom: none; }
-        .diff-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-        .diff-text { line-height: 1.5; }
+
+        .diff-item:last-child {
+            border-bottom: none;
+        }
+
+        .diff-icon {
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .diff-text {
+            line-height: 1.5;
+        }
+
         .diff-text code {
             font-family: var(--mono);
             font-size: 11px;
-            background: rgba(255,255,255,.07);
+            background: rgba(255, 255, 255, .07);
             padding: 1px 5px;
             border-radius: 3px;
         }
@@ -159,7 +222,12 @@
             gap: 16px;
             margin-bottom: 16px;
         }
-        @media(max-width: 800px) { .main-grid { grid-template-columns: 1fr; } }
+
+        @media(max-width: 800px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
         /* ── UPLOAD ZONES ── */
         .upload-zone {
@@ -172,21 +240,51 @@
             cursor: pointer;
             position: relative;
         }
-        .upload-zone.drag-over { border-color: var(--accent); background: rgba(79,142,247,.07); }
-        .upload-zone.loaded { border-style: solid; border-color: var(--accent2); background: rgba(45,212,167,.06); }
-        .upload-zone h3 { font-size: 14px; font-weight: 600; margin: 10px 0 4px; }
-        .upload-zone p { font-size: 12px; color: var(--muted); }
-        .upload-icon { font-size: 32px; }
-        .format-tags { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+
+        .upload-zone.drag-over {
+            border-color: var(--accent);
+            background: rgba(79, 142, 247, .07);
+        }
+
+        .upload-zone.loaded {
+            border-style: solid;
+            border-color: var(--accent2);
+            background: rgba(45, 212, 167, .06);
+        }
+
+        .upload-zone h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 10px 0 4px;
+        }
+
+        .upload-zone p {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .upload-icon {
+            font-size: 32px;
+        }
+
+        .format-tags {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
         .format-tag {
             font-family: var(--mono);
             font-size: 10px;
             padding: 2px 7px;
             border-radius: 3px;
-            background: rgba(255,255,255,.07);
+            background: rgba(255, 255, 255, .07);
             color: var(--muted);
             border: 1px solid var(--border);
         }
+
         .file-loaded-info {
             margin-top: 10px;
             font-size: 12px;
@@ -202,6 +300,7 @@
             flex-wrap: wrap;
             margin-bottom: 16px;
         }
+
         .stat {
             flex: 1;
             min-width: 130px;
@@ -210,6 +309,7 @@
             border-radius: 10px;
             padding: 14px 18px;
         }
+
         .stat-value {
             font-family: var(--mono);
             font-size: 22px;
@@ -217,6 +317,7 @@
             color: var(--accent);
             line-height: 1;
         }
+
         .stat-label {
             font-size: 11px;
             color: var(--muted);
@@ -224,8 +325,14 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .stat.green .stat-value { color: var(--accent2); }
-        .stat.orange .stat-value { color: var(--warn); }
+
+        .stat.green .stat-value {
+            color: var(--accent2);
+        }
+
+        .stat.orange .stat-value {
+            color: var(--warn);
+        }
 
         /* ── ALERTS ── */
         .alert {
@@ -238,10 +345,31 @@
             font-size: 13px;
             animation: slideIn .2s ease;
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-6px); } }
-        .alert-success { background: rgba(45,212,167,.12); border: 1px solid rgba(45,212,167,.3); color: #7fffd4; }
-        .alert-error { background: rgba(247,79,79,.12); border: 1px solid rgba(247,79,79,.3); color: #ffaaaa; }
-        .alert-warn { background: rgba(245,166,35,.12); border: 1px solid rgba(245,166,35,.3); color: #ffd580; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+        }
+
+        .alert-success {
+            background: rgba(45, 212, 167, .12);
+            border: 1px solid rgba(45, 212, 167, .3);
+            color: #7fffd4;
+        }
+
+        .alert-error {
+            background: rgba(247, 79, 79, .12);
+            border: 1px solid rgba(247, 79, 79, .3);
+            color: #ffaaaa;
+        }
+
+        .alert-warn {
+            background: rgba(245, 166, 35, .12);
+            border: 1px solid rgba(245, 166, 35, .3);
+            color: #ffd580;
+        }
 
         /* ── PREVIEW ── */
         .preview-wrap {
@@ -251,6 +379,7 @@
             overflow: hidden;
             margin-bottom: 16px;
         }
+
         .preview-toolbar {
             display: flex;
             align-items: center;
@@ -259,7 +388,13 @@
             border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
         }
-        .preview-title { font-size: 13px; font-weight: 600; flex: 1; }
+
+        .preview-title {
+            font-size: 13px;
+            font-weight: 600;
+            flex: 1;
+        }
+
         .preview-code {
             font-family: var(--mono);
             font-size: 11px;
@@ -272,6 +407,7 @@
             white-space: pre;
             line-height: 1.7;
         }
+
         .preview-line-num {
             color: #3a4060;
             display: inline-block;
@@ -293,17 +429,53 @@
             align-items: center;
             gap: 6px;
         }
-        .btn:active { transform: scale(.97); }
-        .btn:disabled { opacity: .4; cursor: not-allowed; }
-        .btn-primary { background: var(--accent); color: #fff; }
-        .btn-primary:hover:not(:disabled) { opacity: .85; }
-        .btn-success { background: var(--accent2); color: #0f1117; }
-        .btn-success:hover:not(:disabled) { opacity: .85; }
-        .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-        .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+
+        .btn:active {
+            transform: scale(.97);
+        }
+
+        .btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: .85;
+        }
+
+        .btn-success {
+            background: var(--accent2);
+            color: #0f1117;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            opacity: .85;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            color: var(--text);
+            border-color: var(--muted);
+        }
 
         /* ── VALIDATION TABLE ── */
-        .val-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+        .val-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
         .val-table th {
             text-align: left;
             padding: 8px 10px;
@@ -313,14 +485,40 @@
             color: var(--muted);
             border-bottom: 1px solid var(--border);
         }
-        .val-table td { padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,.04); vertical-align: top; }
-        .val-table tr:last-child td { border-bottom: none; }
-        .val-table code { font-family: var(--mono); font-size: 10.5px; background: rgba(255,255,255,.07); padding: 1px 4px; border-radius: 3px; }
-        .ok { color: var(--accent2); }
-        .fail { color: var(--danger); }
-        .warn-cell { color: var(--warn); }
 
-        .hidden { display: none !important; }
+        .val-table td {
+            padding: 7px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            vertical-align: top;
+        }
+
+        .val-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .val-table code {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            background: rgba(255, 255, 255, .07);
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
+        .ok {
+            color: var(--accent2);
+        }
+
+        .fail {
+            color: var(--danger);
+        }
+
+        .warn-cell {
+            color: var(--warn);
+        }
+
+        .hidden {
+            display: none !important;
+        }
 
         /* ── FOOTER ── */
         footer {
@@ -331,622 +529,602 @@
         }
     </style>
 </head>
+
 <body>
-<div class="shell">
+    <div class="shell">
 
-    <!-- HEADER -->
-    <header>
-        <div class="logo-mark">📑</div>
-        <div>
-            <h1>Conversor ARCA/AFIP → FACTURAS.TXT (iTRAFFIC)</h1>
-            <p>Genera archivos compatibles con el importador de facturas de proveedores.<br>
-            Acepta el CSV de ARCA/AFIP o el TXT de "Mis Comprobantes Recibidos".</p>
-            <div class="badge-row">
-                <span class="badge badge-blue">Sin encabezado</span>
-                <span class="badge badge-blue">25 campos + trailing ;</span>
-                <span class="badge badge-green">Decimal con PUNTO</span>
-                <span class="badge badge-green">Moneda: ARS</span>
-                <span class="badge badge-orange">1 fila por factura</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- DIFF PANEL -->
-    <div class="diff-panel">
-        <div class="panel-header" onclick="togglePanel(this)">
-            <span>🔍</span>
-            <span>¿Por qué falla el archivo generado? — Diferencias detectadas</span>
-            <span class="panel-toggle">▼ Ver análisis</span>
-        </div>
-        <div class="panel-body collapsed">
-            <div class="diff-grid">
-                <div class="diff-col bad">
-                    <h4>❌ Código anterior (no importa)</h4>
-                    <div class="diff-item"><span class="diff-icon">✗</span><div class="diff-text">Genera <strong>encabezado</strong> con nombres de columnas en la primera fila. El sistema espera datos desde la línea 1.</div></div>
-                    <div class="diff-item"><span class="diff-icon">✗</span><div class="diff-text"><strong>2 filas por factura</strong> (fila SI + fila NO). El formato correcto es <strong>1 fila por factura</strong>.</div></div>
-                    <div class="diff-item"><span class="diff-icon">✗</span><div class="diff-text">Decimal con <strong>coma</strong>: <code>906000,00</code>. El sistema usa <strong>punto</strong>: <code>906000.0</code></div></div>
-                    <div class="diff-item"><span class="diff-icon">✗</span><div class="diff-text">Moneda <code>P</code> en lugar de <code>ARS</code></div></div>
-                    <div class="diff-item"><span class="diff-icon">✗</span><div class="diff-text">Columnas extra: <code>EsFactura</code>, <code>CodigoFactura</code>, <code>RvaOGasto</code> no existen en FACTURAS.TXT</div></div>
-                    <div class="diff-item"><span class="diff-icon">✗</span><div class="diff-text">Campos numéricos fijos con <code>.toFixed(2)</code> → <code>0,00</code>. Deben ser entero <code>0</code></div></div>
-                </div>
-                <div class="diff-col good">
-                    <h4>✅ Formato correcto (FACTURAS.TXT)</h4>
-                    <div class="diff-item"><span class="diff-icon">✓</span><div class="diff-text"><strong>Sin encabezado.</strong> Primera línea es ya una factura.</div></div>
-                    <div class="diff-item"><span class="diff-icon">✓</span><div class="diff-text"><strong>1 fila por factura</strong>, 26 tokens separados por <code>;</code> (25 campos + trailing semicolon vacío).</div></div>
-                    <div class="diff-item"><span class="diff-icon">✓</span><div class="diff-text">Decimal con <strong>punto</strong>: <code>906000.0</code>, <code>157239.67</code></div></div>
-                    <div class="diff-item"><span class="diff-icon">✓</span><div class="diff-text">Moneda siempre <code>ARS</code></div></div>
-                    <div class="diff-item"><span class="diff-icon">✓</span><div class="diff-text">Exactamente 25 campos: FECHA; COD_OPER; LETRA; TIPO; NUMERO_FAC; RVA; MONEDA; MONTO; GRAVADO21; …12 ceros…; DESCRIP; …9 ceros… ;</div></div>
-                    <div class="diff-item"><span class="diff-icon">✓</span><div class="diff-text">Valores cero se escriben como <code>0</code> (no <code>0.0</code> ni <code>0,00</code>). Montos con punto decimal natural.</div></div>
+        <!-- HEADER -->
+        <header>
+            <div class="logo-mark">📑</div>
+            <div>
+                <h1>Conversor ARCA/AFIP → FACTURAS.TXT (iTRAFFIC)</h1>
+                <p>Genera archivos compatibles con el importador de facturas de proveedores.<br>
+                    Acepta el CSV de ARCA/AFIP o el TXT de "Mis Comprobantes Recibidos".</p>
+                <div class="badge-row">
+                    <span class="badge badge-blue">Sin encabezado</span>
+                    <span class="badge badge-blue">25 campos + trailing ;</span>
+                    <span class="badge badge-green">Decimal con PUNTO</span>
+                    <span class="badge badge-green">Moneda: ARS</span>
+                    <span class="badge badge-orange">1 fila por factura</span>
                 </div>
             </div>
-        </div>
-    </div>
+        </header>
 
-    <!-- UPLOAD AREA -->
-    <div class="main-grid">
-        <!-- AFIP CSV -->
-        <div class="upload-zone" id="zone-afip"
-             ondragover="onDragOver(event,'zone-afip')"
-             ondragleave="onDragLeave('zone-afip')"
-             ondrop="onDrop(event,'afip')"
-             onclick="document.getElementById('input-afip').click()">
-            <div class="upload-icon">📊</div>
-            <h3>CSV de ARCA / AFIP</h3>
-            <p>Comprobantes recibidos exportados desde el portal ARCA</p>
-            <div class="format-tags">
-                <span class="format-tag">.csv</span>
-                <span class="format-tag">Codificación UTF-8</span>
-                <span class="format-tag">; separado</span>
+        <!-- DIFF PANEL -->
+        <div class="diff-panel">
+            <div class="panel-header" onclick="togglePanel(this)">
+                <span>🔍</span>
+                <span>¿Por qué falla el archivo generado? — Diferencias detectadas</span>
+                <span class="panel-toggle">▼ Ver análisis</span>
             </div>
-            <div class="file-loaded-info" id="info-afip"></div>
-            <input type="file" id="input-afip" accept=".csv,.txt" style="display:none">
-        </div>
-
-        <!-- MIS COMPROBANTES TXT -->
-        <div class="upload-zone" id="zone-txt"
-             ondragover="onDragOver(event,'zone-txt')"
-             ondragleave="onDragLeave('zone-txt')"
-             ondrop="onDrop(event,'txt')"
-             onclick="document.getElementById('input-txt').click()">
-            <div class="upload-icon">📄</div>
-            <h3>TXT — Mis Comprobantes Recibidos</h3>
-            <p>Exportación alternativa con 26 columnas por fila</p>
-            <div class="format-tags">
-                <span class="format-tag">.txt</span>
-                <span class="format-tag">26 campos</span>
-                <span class="format-tag">; separado</span>
+            <div class="panel-body collapsed">
+                <div class="diff-grid">
+                    <div class="diff-col bad">
+                        <h4>❌ Código anterior (no importa)</h4>
+                        <div class="diff-item"><span class="diff-icon">✗</span>
+                            <div class="diff-text">Genera <strong>encabezado</strong> con nombres de columnas en la
+                                primera fila. El sistema espera datos desde la línea 1.</div>
+                        </div>
+                        <div class="diff-item"><span class="diff-icon">✗</span>
+                            <div class="diff-text"><strong>2 filas por factura</strong> (fila SI + fila NO). El formato
+                                correcto es <strong>1 fila por factura</strong>.</div>
+                        </div>
+                        <div class="diff-item"><span class="diff-icon">✗</span>
+                            <div class="diff-text">Decimal con <strong>coma</strong>: <code>906000,00</code>. El sistema
+                                usa <strong>punto</strong>: <code>906000.0</code></div>
+                        </div>
+                        <div class="diff-item"><span class="diff-icon">✗</span>
+                            <div class="diff-text">Moneda <code>P</code> en lugar de <code>ARS</code></div>
+                        </div>
+                        <div class="diff-item"><span class="diff-icon">✗</span>
+                            <div class="diff-text">Columnas extra: <code>EsFactura</code>, <code>CodigoFactura</code>,
+                                <code>RvaOGasto</code> no existen en FACTURAS.TXT</div>
+                        </div>
+                        <div class="diff-item"><span class="diff-icon">✗</span>
+                            <div class="diff-text">Campos numéricos fijos con <code>.toFixed(2)</code> →
+                                <code>0,00</code>. Deben ser entero <code>0</code></div>
+                        </div>
+                    </div>
+                    <div class="diff-col good">
+                        <h4>✅ Formato correcto (FACTURAS.TXT)</h4>
+                        <div class="diff-item"><span class="diff-icon">✓</span>
+                            <div class="diff-text"><strong>Sin encabezado.</strong> Primera línea es ya una factura.
+                            </div>
+                        </div>
+                        <div class="diff-item"><span class="diff-icon">✓</span>
+                            <div class="diff-text"><strong>1 fila por factura</strong>, 26 tokens separados por
+                                <code>;</code> (25 campos + trailing semicolon vacío).</div>
+                        </div>
+                        <div class="diff-item"><span class="diff-icon">✓</span>
+                            <div class="diff-text">Decimal con <strong>punto</strong>: <code>906000.0</code>,
+                                <code>157239.67</code></div>
+                        </div>
+                        <div class="diff-item"><span class="diff-icon">✓</span>
+                            <div class="diff-text">Moneda siempre <code>ARS</code></div>
+                        </div>
+                        <div class="diff-item"><span class="diff-icon">✓</span>
+                            <div class="diff-text">Exactamente 25 campos: FECHA; COD_OPER; LETRA; TIPO; NUMERO_FAC; RVA;
+                                MONEDA; MONTO; GRAVADO21; …12 ceros…; DESCRIP; …9 ceros… ;</div>
+                        </div>
+                        <div class="diff-item"><span class="diff-icon">✓</span>
+                            <div class="diff-text">Valores cero se escriben como <code>0</code> (no <code>0.0</code> ni
+                                <code>0,00</code>). Montos con punto decimal natural.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="file-loaded-info" id="info-txt"></div>
-            <input type="file" id="input-txt" accept=".csv,.txt" style="display:none">
         </div>
+
+        <!-- UPLOAD AREA -->
+        <div class="main-grid">
+            <!-- AFIP CSV -->
+            <div class="upload-zone" id="zone-afip" ondragover="onDragOver(event,'zone-afip')"
+                ondragleave="onDragLeave('zone-afip')" ondrop="onDrop(event,'afip')"
+                onclick="document.getElementById('input-afip').click()">
+                <div class="upload-icon">📊</div>
+                <h3>CSV de ARCA / AFIP</h3>
+                <p>Comprobantes recibidos exportados desde el portal ARCA</p>
+                <div class="format-tags">
+                    <span class="format-tag">.csv</span>
+                    <span class="format-tag">Codificación UTF-8</span>
+                    <span class="format-tag">; separado</span>
+                </div>
+                <div class="file-loaded-info" id="info-afip"></div>
+                <input type="file" id="input-afip" accept=".csv,.txt" style="display:none">
+            </div>
+
+            <!-- MIS COMPROBANTES TXT -->
+            <div class="upload-zone" id="zone-txt" ondragover="onDragOver(event,'zone-txt')"
+                ondragleave="onDragLeave('zone-txt')" ondrop="onDrop(event,'txt')"
+                onclick="document.getElementById('input-txt').click()">
+                <div class="upload-icon">📄</div>
+                <h3>TXT — Mis Comprobantes Recibidos</h3>
+                <p>Exportación alternativa con 26 columnas por fila</p>
+                <div class="format-tags">
+                    <span class="format-tag">.txt</span>
+                    <span class="format-tag">26 campos</span>
+                    <span class="format-tag">; separado</span>
+                </div>
+                <div class="file-loaded-info" id="info-txt"></div>
+                <input type="file" id="input-txt" accept=".csv,.txt" style="display:none">
+            </div>
+        </div>
+
+        <!-- ALERTS -->
+        <div id="alert-container"></div>
+
+        <!-- STATS -->
+        <div class="stats-bar hidden" id="stats-bar">
+            <div class="stat">
+                <div class="stat-value" id="s-facturas">0</div>
+                <div class="stat-label">Facturas / FAC</div>
+            </div>
+            <div class="stat orange">
+                <div class="stat-value" id="s-nc">0</div>
+                <div class="stat-label">Notas de Crédito</div>
+            </div>
+            <div class="stat green">
+                <div class="stat-value" id="s-total">$0</div>
+                <div class="stat-label">Monto total ARS</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="s-lineas">0</div>
+                <div class="stat-label">Líneas en TXT</div>
+            </div>
+        </div>
+
+        <!-- VALIDATION TABLE -->
+        <div class="diff-panel hidden" id="val-panel">
+            <div class="panel-header" onclick="togglePanel(this)">
+                <span>✅</span>
+                <span>Validaciones del archivo generado</span>
+                <span class="panel-toggle">▼ Ver</span>
+            </div>
+            <div class="panel-body collapsed">
+                <table class="val-table">
+                    <thead>
+                        <tr>
+                            <th>Regla</th>
+                            <th>Esperado</th>
+                            <th>Resultado</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="val-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PREVIEW -->
+        <div class="preview-wrap hidden" id="preview-wrap">
+            <div class="preview-toolbar">
+                <span class="preview-title">📋 Previsualización — FACTURAS.TXT</span>
+                <button class="btn btn-ghost" onclick="copyTxt()">⎘ Copiar</button>
+                <button class="btn btn-success" onclick="downloadTxt()">↓ Descargar TXT</button>
+            </div>
+            <div class="preview-code" id="preview-code"></div>
+        </div>
+
+        <footer>Procesamiento 100 % local · Ningún dato sale del navegador</footer>
     </div>
 
-    <!-- ALERTS -->
-    <div id="alert-container"></div>
+    <script>
+        /* ─────────────────────────────────────────────
+           ESTADO GLOBAL
+        ───────────────────────────────────────────── */
+        let generatedTxt = '';
+        let parsedRows = [];
 
-    <!-- STATS -->
-    <div class="stats-bar hidden" id="stats-bar">
-        <div class="stat">
-            <div class="stat-value" id="s-facturas">0</div>
-            <div class="stat-label">Facturas / FAC</div>
-        </div>
-        <div class="stat orange">
-            <div class="stat-value" id="s-nc">0</div>
-            <div class="stat-label">Notas de Crédito</div>
-        </div>
-        <div class="stat green">
-            <div class="stat-value" id="s-total">$0</div>
-            <div class="stat-label">Monto total ARS</div>
-        </div>
-        <div class="stat">
-            <div class="stat-value" id="s-lineas">0</div>
-            <div class="stat-label">Líneas en TXT</div>
-        </div>
-    </div>
+        /* ─────────────────────────────────────────────
+           UTILIDADES
+        ───────────────────────────────────────────── */
+        function parseNum(str) {
+            if (str === null || str === undefined || str === '') return 0;
+            if (typeof str === 'number') return str;
+            // Remove quotes, spaces
+            let s = String(str).trim().replace(/"/g, '').trim();
+            // Remove currency symbol
+            s = s.replace(/^\$/, '').trim();
+            // Handle Argentine format: dots as thousands, comma as decimal
+            // e.g. "1.234,56" -> 1234.56
+            if (s.includes(',') && s.includes('.')) {
+                // thousands dot, decimal comma
+                s = s.replace(/\./g, '').replace(',', '.');
+            } else if (s.includes(',')) {
+                s = s.replace(',', '.');
+            }
+            s = s.replace(/[^\d.\-]/g, '');
+            const n = parseFloat(s);
+            return isNaN(n) ? 0 : n;
+        }
 
-    <!-- VALIDATION TABLE -->
-    <div class="diff-panel hidden" id="val-panel">
-        <div class="panel-header" onclick="togglePanel(this)">
-            <span>✅</span>
-            <span>Validaciones del archivo generado</span>
-            <span class="panel-toggle">▼ Ver</span>
-        </div>
-        <div class="panel-body collapsed">
-            <table class="val-table">
-                <thead>
-                    <tr>
-                        <th>Regla</th>
-                        <th>Esperado</th>
-                        <th>Resultado</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="val-body"></tbody>
-            </table>
-        </div>
-    </div>
+        function fmtNum(n) {
+            const rounded = Math.round(n * 100) / 100;
+            if (rounded === 0) return '0';
+            if (rounded % 1 === 0) return rounded.toFixed(1);
+            return rounded.toString();
+        }
 
-    <!-- PREVIEW -->
-    <div class="preview-wrap hidden" id="preview-wrap">
-        <div class="preview-toolbar">
-            <span class="preview-title">📋 Previsualización — FACTURAS.TXT</span>
-            <button class="btn btn-ghost" onclick="copyTxt()">⎘ Copiar</button>
-            <button class="btn btn-success" onclick="downloadTxt()">↓ Descargar TXT</button>
-        </div>
-        <div class="preview-code" id="preview-code"></div>
-    </div>
+        function fmtFecha(str) {
+            if (!str) return '';
+            str = String(str).trim().replace(/"/g, '');
+            if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
+                const [y, m, d] = str.split('-');
+                return `${d.padStart(2, '0')}/${m.padStart(2, '0')}/${y}`;
+            }
+            if (/^\d{2}\/\d{2}\/\d{4}/.test(str)) return str.substring(0, 10);
+            return str;
+        }
 
-    <footer>Procesamiento 100 % local · Ningún dato sale del navegador</footer>
-</div>
+        function fmtNumFac(pv, num) {
+            const pvStr = String(pv).trim().padStart(4, '0');
+            const numStr = String(num).trim().padStart(8, '0');
+            return `${pvStr}-${numStr}`;
+        }
 
-<script>
-/* ─────────────────────────────────────────────
-   ESTADO GLOBAL
-───────────────────────────────────────────── */
-let generatedTxt = '';
-let parsedRows = [];
+        function mapTipoComprobante(tipoAfip) {
+            const t = parseInt(String(tipoAfip).trim());
+            const map = {
+                1: { cod: '1', tipo: 'FAC', letra: 'A' },
+                2: { cod: '2', tipo: 'ND', letra: 'A' },
+                3: { cod: '3', tipo: 'NC', letra: 'A' },
+                6: { cod: '1', tipo: 'FAC', letra: 'B' },
+                7: { cod: '2', tipo: 'ND', letra: 'B' },
+                8: { cod: '3', tipo: 'NC', letra: 'B' },
+                11: { cod: '1', tipo: 'FAC', letra: 'C' },
+                12: { cod: '2', tipo: 'ND', letra: 'C' },
+                13: { cod: '3', tipo: 'NC', letra: 'C' },
+            };
+            return map[t] || { cod: '1', tipo: 'FAC', letra: 'A' };
+        }
 
-/* ─────────────────────────────────────────────
-   UTILIDADES
-───────────────────────────────────────────── */
-function parseNum(str) {
-    if (str === null || str === undefined || str === '') return 0;
-    if (typeof str === 'number') return str;
-    // Remove quotes, spaces
-    let s = String(str).trim().replace(/"/g, '').trim();
-    // Remove currency symbol
-    s = s.replace(/^\$/, '').trim();
-    // Handle Argentine format: dots as thousands, comma as decimal
-    // e.g. "1.234,56" -> 1234.56
-    if (s.includes(',') && s.includes('.')) {
-        // thousands dot, decimal comma
-        s = s.replace(/\./g, '').replace(',', '.');
-    } else if (s.includes(',')) {
-        s = s.replace(',', '.');
-    }
-    s = s.replace(/[^\d.\-]/g, '');
-    const n = parseFloat(s);
-    return isNaN(n) ? 0 : n;
-}
+        /* ─────────────────────────────────────────────
+           CONSTRUCCIÓN DE LÍNEA FINAL
+           Formato: 26 tokens separados por ';'
+           Pos 0-24 = campos, pos 25 = vacío (trailing ;)
+           
+            [0]  FECHA (texto)
+            [1]  COD_OPER (texto)
+            [2]  LETRA (texto)
+            [3]  TIPO (texto)
+            [4]  NUMERO_FAC (texto)
+            [5]  RVA (texto)
+            [6]  MONEDA (texto)
+            [7]  MONTO (numero)
+            [8]  IVATASA1 (numero)
+            [9]  IVATASA2 (numero)
+            [10] PLANNING (texto)
+            [11] CENTROCOSTO (texto)
+            [12] CUENTA (texto)
+            [13] DESCRIP (texto)
+            [14] IVA_GAS_105 (numero)
+            [15] IVATASA27 (numero)
+            [16] RETENIB (numero)
+            [17] RETENGAN (numero)
+            [18] RETENIVA (numero)
+            [19] PERCEP_IB (numero)
+            [20] PERCEP_GANAN (numero)
+            [21] PERCEP_IVA (numero)
+            [22] PERCEP_INT (numero)
+            [23] NO_GRAVADO (numero)
+            [24] EXENTO (numero)
+            [25] (vacío — trailing semicolon)
+        ───────────────────────────────────────────── */
+        function buildLine(row) {
+            const fields = new Array(26).fill('0');
+            fields[0] = row.fecha || "";
+            fields[1] = row.codOper || "";
+            fields[2] = row.letra || "";
+            fields[3] = row.tipo || "";
+            fields[4] = row.numeroFac || "";
+            fields[5] = row.rva || "0";
+            fields[6] = row.moneda || "ARS";
+            fields[7] = fmtNum(row.monto);
+            fields[8] = fmtNum(row.iva21);
+            fields[9] = fmtNum(row.iva105);
+            fields[10] = row.planning || "";
+            fields[11] = row.centroCosto || "";
+            fields[12] = row.cuenta || "";
+            fields[13] = row.descrip || "";
+            fields[14] = fmtNum(row.ivaGas105);
+            fields[15] = fmtNum(row.iva27);
+            fields[16] = fmtNum(row.retenIb);
+            fields[17] = fmtNum(row.retenGan);
+            fields[18] = fmtNum(row.retenIva);
+            fields[19] = fmtNum(row.percepIb);
+            fields[20] = fmtNum(row.percepGanan);
+            fields[21] = fmtNum(row.percepIva);
+            fields[22] = fmtNum(row.percepInt);
+            fields[23] = fmtNum(row.noGrav);
+            fields[24] = fmtNum(row.exento);
+            fields[25] = '';
+            return fields.join(';');
+        }
 
-function fmtNum(n) {
-    // Format number exactly like FACTURAS.TXT: use JS default toString
-    // 906000 -> "906000.0", 157239.67 -> "157239.67"
-    // We need to replicate exactly how Python/the system formats floats
-    const rounded = Math.round(n * 100) / 100;
-    if (rounded === 0) return '0';
-    // Check if it's a whole number
-    if (rounded % 1 === 0) return rounded.toFixed(1); // e.g. 906000.0
-    return rounded.toString(); // e.g. 157239.67
-}
+        /* ─────────────────────────────────────────────
+           PARSER 1: CSV DE ARCA/AFIP
+        ───────────────────────────────────────────── */
+        function parseAfipCsv(text) {
+            const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+            if (lines.length < 2) throw new Error('El archivo no tiene datos suficientes.');
 
-function fmtFecha(str) {
-    if (!str) return '';
-    str = String(str).trim().replace(/"/g, '');
-    // AAAA-MM-DD -> DD/MM/AAAA
-    if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
-        const [y, m, d] = str.split('-');
-        return `${d.padStart(2,'0')}/${m.padStart(2,'0')}/${y}`;
-    }
-    // DD/MM/AAAA -> already correct
-    if (/^\d{2}\/\d{2}\/\d{4}/.test(str)) return str.substring(0, 10);
-    return str;
-}
+            const headerRaw = lines[0].split(';').map(c => c.replace(/"/g, '').trim().toLowerCase());
+            const idx = {
+                fecha: headerRaw.findIndex(h => h.includes('fecha')),
+                tipo: headerRaw.findIndex(h => h === 'tipo de comprobante'),
+                pv: headerRaw.findIndex(h => h.includes('punto de venta')),
+                numDesde: headerRaw.findIndex(h => h.includes('número desde') || h.includes('numero desde')),
+                emisor: headerRaw.findIndex(h => h.includes('denominaci') && h.includes('emisor')),
+                iva21: headerRaw.findIndex(h => h === 'iva 21%'),
+                iva105: headerRaw.findIndex(h => h === 'iva 10,5%'),
+                noGrav: headerRaw.findIndex(h => h.includes('neto no gravado')),
+                exento: headerRaw.findIndex(h => h.includes('op. exentas')),
+                total: headerRaw.findIndex(h => h === 'imp. total'),
+            };
 
-function fmtNumFac(pv, num) {
-    const pvStr = String(pv).trim().padStart(4, '0');
-    const numStr = String(num).trim().padStart(8, '0');
-    return `${pvStr}-${numStr}`;
-}
+            if (idx.total < 0 || idx.fecha < 0) {
+                throw new Error('No se encontraron columnas clave (Fecha, Imp. Total).');
+            }
 
-// Map Tipo de Comprobante (AFIP code) to COD_OPER and TIPO string
-function mapTipoComprobante(tipoAfip) {
-    const t = parseInt(String(tipoAfip).trim());
-    // AFIP codes: 1=Factura A, 2=ND A, 3=NC A, 6=Factura B, 7=ND B, 8=NC B, 11=Factura C, 12=ND C, 13=NC C
-    const map = {
-        1: { cod: '1', tipo: 'FAC', letra: 'A' },
-        2: { cod: '2', tipo: 'ND',  letra: 'A' },
-        3: { cod: '3', tipo: 'NC',  letra: 'A' },
-        6: { cod: '1', tipo: 'FAC', letra: 'B' },
-        7: { cod: '2', tipo: 'ND',  letra: 'B' },
-        8: { cod: '3', tipo: 'NC',  letra: 'B' },
-        11:{ cod: '1', tipo: 'FAC', letra: 'C' },
-        12:{ cod: '2', tipo: 'ND',  letra: 'C' },
-        13:{ cod: '3', tipo: 'NC',  letra: 'C' },
-    };
-    return map[t] || { cod: '1', tipo: 'FAC', letra: 'A' };
-}
+            const rows = [];
+            for (let i = 1; i < lines.length; i++) {
+                const cells = splitCsvLine(lines[i]);
+                if (cells.length < 5) continue;
+                const monto = parseNum(cells[idx.total]);
+                if (!monto) continue;
 
-/* ─────────────────────────────────────────────
-   CONSTRUCCIÓN DE LÍNEA FINAL
-   Formato: 26 tokens separados por ';'
-   Pos 0-24 = campos, pos 25 = vacío (trailing ;)
-   
-   [0]  FECHA
-   [1]  COD_OPER   (1=FAC, 3=NC, 2=ND)
-   [2]  LETRA      (A/B/C)
-   [3]  TIPO       (FAC/NC/ND)
-   [4]  NUMERO_FAC (XXXX-YYYYYYYY)
-   [5]  RVA        (siempre 0)
-   [6]  MONEDA     (ARS)
-   [7]  MONTO      (punto decimal)
-   [8]  GRAVADO21  (IVA 21%)
-   [9]  GRAVADO105 (siempre 0)
-   [10] GRAVADOGAS105 (siempre 0)
-   [11] GRAVADO27  (siempre 0)
-   [12] RETENIB    (siempre 0)
-   [13] DESCRIP    (nombre proveedor)
-   [14] RETENGAN   (siempre 0)
-   [15] RETENIVA   (siempre 0)
-   [16] PERCEP_IB  (siempre 0)
-   [17] PERCEP_GANAN (siempre 0)
-   [18] PERCEP_IVA (siempre 0)
-   [19] PERCEP_INT (siempre 0)
-   [20] NO_GRAVADO (siempre 0)
-   [21] EXENTO     (siempre 0)
-   [22] PLANNING   (siempre 0)
-   [23] campo23    (siempre 0)
-   [24] campo24    (siempre 0)
-   [25] (vacío — trailing semicolon)
-───────────────────────────────────────────── */
-function buildLine(row) {
-    const fields = new Array(26).fill('0');
-    fields[0]  = row.fecha;
-    fields[1]  = row.codOper;
-    fields[2]  = row.letra;
-    fields[3]  = row.tipo;
-    fields[4]  = row.numeroFac;
-    fields[5]  = '0';
-    fields[6]  = 'ARS';
-    fields[7]  = fmtNum(row.monto);
-    fields[8]  = fmtNum(row.iva21);
-    fields[9]  = '0';
-    fields[10] = '0';
-    fields[11] = '0';
-    fields[12] = '0';
-    fields[13] = row.descrip;
-    fields[14] = '0';
-    fields[15] = '0';
-    fields[16] = '0';
-    fields[17] = '0';
-    fields[18] = '0';
-    fields[19] = '0';
-    fields[20] = '0';
-    fields[21] = '0';
-    fields[22] = '0';
-    fields[23] = '0';
-    fields[24] = '0';
-    fields[25] = '';
-    return fields.join(';');
-}
+                const tipoInfo = mapTipoComprobante(cells[idx.tipo]);
+                const pv = idx.pv >= 0 ? cells[idx.pv] : '0';
+                const num = idx.numDesde >= 0 ? cells[idx.numDesde] : '0';
 
-/* ─────────────────────────────────────────────
-   PARSER 1: CSV DE ARCA/AFIP
-   Encabezado con 30 columnas, separador ;
-   Fechas AAAA-MM-DD, decimales con coma
-───────────────────────────────────────────── */
-function parseAfipCsv(text) {
-    const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
-    if (lines.length < 2) throw new Error('El archivo no tiene datos suficientes.');
+                rows.push({
+                    fecha: fmtFecha(cells[idx.fecha]),
+                    codOper: tipoInfo.cod,
+                    letra: tipoInfo.letra,
+                    tipo: tipoInfo.tipo,
+                    numeroFac: fmtNumFac(pv, num),
+                    monto: monto,
+                    iva21: idx.iva21 >= 0 ? parseNum(cells[idx.iva21]) : 0,
+                    iva105: idx.iva105 >= 0 ? parseNum(cells[idx.iva105]) : 0,
+                    noGrav: idx.noGrav >= 0 ? parseNum(cells[idx.noGrav]) : 0,
+                    exento: idx.exento >= 0 ? parseNum(cells[idx.exento]) : 0,
+                    descrip: idx.emisor >= 0 ? cells[idx.emisor].replace(/"/g, '').trim() : '',
+                    rva: '0', moneda: 'ARS', planning: '', centroCosto: '', cuenta: '',
+                    ivaGas105: 0, iva27: 0, retenIb: 0, retenGan: 0, retenIva: 0,
+                    percepIb: 0, percepGanan: 0, percepIva: 0, percepInt: 0
+                });
+            }
+            if (rows.length === 0) throw new Error('No se encontraron facturas.');
+            return rows;
+        }
 
-    // Find header row
-    const headerRaw = lines[0].split(';').map(c => c.replace(/"/g, '').trim().toLowerCase());
-    
-    const idx = {
-        fecha:    headerRaw.findIndex(h => h.includes('fecha')),
-        tipo:     headerRaw.findIndex(h => h === 'tipo de comprobante'),
-        pv:       headerRaw.findIndex(h => h.includes('punto de venta')),
-        numDesde: headerRaw.findIndex(h => h.includes('número desde') || h.includes('numero desde')),
-        emisor:   headerRaw.findIndex(h => h.includes('denominaci') && h.includes('emisor')),
-        iva21:    headerRaw.findIndex(h => h === 'iva 21%'),
-        iva105:   headerRaw.findIndex(h => h === 'iva 10,5%'),
-        noGrav:   headerRaw.findIndex(h => h.includes('neto no gravado')),
-        exento:   headerRaw.findIndex(h => h.includes('op. exentas')),
-        total:    headerRaw.findIndex(h => h === 'imp. total'),
-    };
+        /* ─────────────────────────────────────────────
+           PARSER 2: TXT MIS COMPROBANTES RECIBIDOS
+        ───────────────────────────────────────────── */
+        function parseMisComprobantes(text) {
+            const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+            const rows = [];
+            for (const line of lines) {
+                const cells = line.split(';');
+                if (cells.length < 10) continue;
+                const fecha = cells[0].trim();
+                if (!/^\d{2}\/\d{2}\/\d{4}$/.test(fecha)) continue;
+                const monto = parseNum(cells[7]);
+                if (!monto) continue;
 
-    if (idx.total < 0 || idx.fecha < 0) {
-        throw new Error('No se encontraron columnas clave (Fecha, Imp. Total). Verificá que sea un CSV de ARCA.');
-    }
+                rows.push({
+                    fecha: cells[0].trim(),
+                    codOper: cells[1].trim(),
+                    letra: cells[2].trim(),
+                    tipo: cells[3].trim(),
+                    numeroFac: cells[4].trim(),
+                    monto: monto,
+                    iva21: parseNum(cells[8]),
+                    iva105: parseNum(cells[9]),
+                    noGrav: parseNum(cells[23] || cells[20]),
+                    exento: parseNum(cells[24] || cells[21]),
+                    descrip: cells[13] ? cells[13].trim() : '',
+                    rva: cells[5] || '0',
+                    moneda: cells[6] || 'ARS',
+                    planning: cells[10] || '',
+                    centroCosto: cells[11] || '',
+                    cuenta: cells[12] || '',
+                    ivaGas105: parseNum(cells[14]),
+                    iva27: parseNum(cells[15]),
+                    retenIb: parseNum(cells[16]),
+                    retenGan: parseNum(cells[17]),
+                    retenIva: parseNum(cells[18]),
+                    percepIb: parseNum(cells[19]),
+                    percepGanan: parseNum(cells[20]),
+                    percepIva: parseNum(cells[21]),
+                    percepInt: parseNum(cells[22])
+                });
+            }
+            if (rows.length === 0) throw new Error('No se encontraron filas válidas.');
+            return rows;
+        }
 
-    const rows = [];
-    for (let i = 1; i < lines.length; i++) {
-        const cells = splitCsvLine(lines[i]);
-        if (cells.length < 5) continue;
+        function splitCsvLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (ch === '"') { inQuotes = !inQuotes; }
+                else if (ch === ';' && !inQuotes) { result.push(current.trim()); current = ''; }
+                else { current += ch; }
+            }
+            result.push(current.trim());
+            return result;
+        }
 
-        const monto = parseNum(cells[idx.total]);
-        if (!monto) continue;
+        function detectAndParse(text, filename) {
+            const firstLine = text.split(/\r?\n/)[0];
+            if (firstLine.toLowerCase().includes('tipo de comprobante') || firstLine.toLowerCase().includes('fecha de emisi')) {
+                return { rows: parseAfipCsv(text), source: 'ARCA/AFIP CSV' };
+            }
+            if (/^\d{2}\/\d{2}\/\d{4}/.test(firstLine.trim())) {
+                return { rows: parseMisComprobantes(text), source: 'Mis Comprobantes TXT' };
+            }
+            try { return { rows: parseAfipCsv(text), source: 'ARCA/AFIP CSV' }; } catch (e) { }
+            try { return { rows: parseMisComprobantes(text), source: 'Mis Comprobantes TXT' }; } catch (e) { }
+            throw new Error('No se pudo detectar el formato del archivo.');
+        }
 
-        const tipoInfo = mapTipoComprobante(cells[idx.tipo]);
-        const pv = idx.pv >= 0 ? cells[idx.pv] : '0';
-        const num = idx.numDesde >= 0 ? cells[idx.numDesde] : '0';
+        function generateTxt(rows) {
+            return rows.map(r => buildLine(r)).join('\r\n');
+        }
 
-        rows.push({
-            fecha:     fmtFecha(cells[idx.fecha]),
-            codOper:   tipoInfo.cod,
-            letra:     tipoInfo.letra,
-            tipo:      tipoInfo.tipo,
-            numeroFac: fmtNumFac(pv, num),
-            monto:     monto,
-            iva21:     idx.iva21 >= 0 ? parseNum(cells[idx.iva21]) : 0,
-            noGrav:    idx.noGrav >= 0 ? parseNum(cells[idx.noGrav]) : 0,
-            exento:    idx.exento >= 0 ? parseNum(cells[idx.exento]) : 0,
-            descrip:   idx.emisor >= 0 ? cells[idx.emisor].replace(/"/g, '').trim() : '',
-        });
-    }
+        function validateTxt(txt, rows) {
+            const lines = txt.split(/\r?\n/).filter(l => l.trim() !== '');
+            const checks = [];
+            const firstLine = lines[0] || '';
+            const startsWithDate = /^\d{2}\/\d{2}\/\d{4}/.test(firstLine);
+            checks.push({ rule: 'Sin encabezado', expected: 'Primera línea = datos', result: startsWithDate ? 'OK' : 'Tiene encabezado', ok: startsWithDate });
+            checks.push({ rule: 'Líneas totales', expected: `${rows.length}`, result: `${lines.length}`, ok: lines.length === rows.length });
+            const wrongFields = lines.filter(l => l.split(';').length !== 26);
+            checks.push({ rule: 'Campos por línea = 26', expected: '26 en todas', result: wrongFields.length === 0 ? '26 en todas ✓' : `${wrongFields.length} líneas con campo incorrecto`, ok: wrongFields.length === 0 });
+            const hasComma = lines.some(l => {
+                const f = l.split(';');
+                return /,\d{2}$/.test(f[7]) || /,\d{2}$/.test(f[8]);
+            });
+            checks.push({ rule: 'Decimal con punto', expected: '906000.0', result: hasComma ? 'Se encontró coma como decimal ✗' : 'Punto decimal ✓', ok: !hasComma });
+            const wrongMoneda = lines.filter(l => l.split(';')[6] !== 'ARS');
+            checks.push({ rule: 'Moneda = ARS', expected: 'ARS', result: wrongMoneda.length === 0 ? 'ARS en todas ✓' : `${wrongMoneda.length} líneas con moneda distinta`, ok: wrongMoneda.length === 0 });
+            const noTrailing = lines.filter(l => !l.endsWith(';'));
+            checks.push({ rule: 'Trailing semicolon', expected: 'Cada línea termina en ;', result: noTrailing.length === 0 ? 'OK ✓' : `${noTrailing.length} líneas sin trailing ;`, ok: noTrailing.length === 0 });
+            const wrongDate = lines.filter(l => !/^\d{2}\/\d{2}\/\d{4}/.test(l));
+            checks.push({ rule: 'Fechas DD/MM/YYYY', expected: '22/03/2026', result: wrongDate.length === 0 ? 'Formato correcto ✓' : `${wrongDate.length} líneas con fecha incorrecta`, ok: wrongDate.length === 0 });
+            const wrongNum = lines.filter(l => {
+                const f = l.split(';');
+                return !/^\d{4}-\d{8}$/.test(f[4]);
+            });
+            checks.push({ rule: 'NUMERO_FAC XXXX-YYYYYYYY', expected: '0064-00004904', result: wrongNum.length === 0 ? 'Formato correcto ✓' : `${wrongNum.length} con formato incorrecto`, ok: wrongNum.length === 0 });
+            return checks;
+        }
 
-    if (rows.length === 0) throw new Error('No se encontraron facturas en el archivo.');
-    return rows;
-}
+        function showAlert(msg, type = 'success') {
+            const el = document.createElement('div');
+            el.className = `alert alert-${type}`;
+            el.innerHTML = `<span>${type === 'success' ? '✓' : type === 'warn' ? '⚠' : '✗'}</span><span>${msg}</span>`;
+            const container = document.getElementById('alert-container');
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 6000);
+        }
 
-/* ─────────────────────────────────────────────
-   PARSER 2: TXT MIS COMPROBANTES RECIBIDOS
-   26 columnas ya en formato casi correcto
-   Solo necesita normalizar 0.0 -> 0
-───────────────────────────────────────────── */
-function parseMisComprobantes(text) {
-    const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
-    const rows = [];
+        function togglePanel(headerEl) {
+            const body = headerEl.nextElementSibling;
+            const toggle = headerEl.querySelector('.panel-toggle');
+            const collapsed = body.classList.toggle('collapsed');
+            toggle.textContent = collapsed ? '▼ Ver' : '▲ Ocultar';
+        }
 
-    for (const line of lines) {
-        const cells = line.split(';');
-        if (cells.length < 10) continue;
+        function updateStats(rows) {
+            const fac = rows.filter(r => r.tipo === 'FAC').length;
+            const nc = rows.filter(r => r.tipo === 'NC' || r.tipo === 'ND').length;
+            const total = rows.reduce((s, r) => s + r.monto, 0);
+            document.getElementById('s-facturas').textContent = fac;
+            document.getElementById('s-nc').textContent = nc;
+            document.getElementById('s-total').textContent = '$' + total.toLocaleString('es-AR', { maximumFractionDigits: 2 });
+            document.getElementById('s-lineas').textContent = rows.length;
+            document.getElementById('stats-bar').classList.remove('hidden');
+        }
 
-        const fecha = cells[0].trim();
-        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(fecha)) continue; // skip non-data lines
+        function renderValidations(checks) {
+            const tbody = document.getElementById('val-body');
+            tbody.innerHTML = checks.map(c => `
+                <tr>
+                    <td>${c.rule}</td>
+                    <td><code>${c.expected}</code></td>
+                    <td><code>${c.result}</code></td>
+                    <td class="${c.ok ? 'ok' : 'fail'}">${c.ok ? '✅ OK' : '❌ ERROR'}</td>
+                </tr>
+            `).join('');
+            document.getElementById('val-panel').classList.remove('hidden');
+        }
 
-        const codOper = cells[1].trim();
-        const letra   = cells[2].trim();
-        const tipo    = cells[3].trim();
-        const numFac  = cells[4].trim();
-        const monto   = parseNum(cells[7]);
-        const iva21   = parseNum(cells[8]);
-        const descrip = cells[13].trim();
+        function renderPreview(txt) {
+            const lines = txt.split(/\r?\n/);
+            const maxShow = 40;
+            const shown = lines.slice(0, maxShow);
+            const previewEl = document.getElementById('preview-code');
+            previewEl.innerHTML = shown.map((l, i) =>
+                `<span class="preview-line-num">${(i + 1).toString().padStart(3, ' ')}</span>${escHtml(l)}`
+            ).join('\n') + (lines.length > maxShow ? `\n<span style="color:var(--muted)">     … y ${lines.length - maxShow} líneas más</span>` : '');
+            document.getElementById('preview-wrap').classList.remove('hidden');
+        }
 
-        if (!monto) continue;
+        function escHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
 
-        rows.push({
-            fecha, codOper, letra, tipo,
-            numeroFac: numFac,
-            monto, iva21,
-            noGrav: 0, exento: 0,
-            descrip,
-        });
-    }
+        function processFile(text, filename) {
+            try {
+                const { rows, source } = detectAndParse(text, filename);
+                parsedRows = rows;
+                generatedTxt = generateTxt(rows);
+                updateStats(rows);
+                const checks = validateTxt(generatedTxt, rows);
+                renderValidations(checks);
+                renderPreview(generatedTxt);
+                const allOk = checks.every(c => c.ok);
+                showAlert(`✅ ${rows.length} registros procesados desde "${source}". ${allOk ? 'Todas las validaciones OK.' : 'Hay advertencias.'}`, allOk ? 'success' : 'warn');
+            } catch (e) {
+                showAlert(e.message, 'error');
+            }
+        }
 
-    if (rows.length === 0) throw new Error('No se encontraron filas válidas en el TXT.');
-    return rows;
-}
+        function readFile(file, zoneId, infoId, type) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById(zoneId).classList.add('loaded');
+                document.getElementById(infoId).textContent = `✓ ${file.name}`;
+                processFile(e.target.result, file.name);
+            };
+            reader.onerror = () => showAlert('Error al leer el archivo.', 'error');
+            reader.readAsText(file, 'UTF-8');
+        }
 
-// CSV line splitter that handles quoted fields
-function splitCsvLine(line) {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
-    for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
-        if (ch === '"') { inQuotes = !inQuotes; }
-        else if (ch === ';' && !inQuotes) { result.push(current.trim()); current = ''; }
-        else { current += ch; }
-    }
-    result.push(current.trim());
-    return result;
-}
+        function onDragOver(e, zoneId) {
+            e.preventDefault();
+            document.getElementById(zoneId).classList.add('drag-over');
+        }
+        function onDragLeave(zoneId) {
+            document.getElementById(zoneId).classList.remove('drag-over');
+        }
+        function onDrop(e, type) {
+            e.preventDefault();
+            const zoneId = `zone-${type}`;
+            const infoId = `info-${type}`;
+            document.getElementById(zoneId).classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file) readFile(file, zoneId, infoId, type);
+        }
 
-/* ─────────────────────────────────────────────
-   AUTO-DETECT FORMAT
-───────────────────────────────────────────── */
-function detectAndParse(text, filename) {
-    const firstLine = text.split(/\r?\n/)[0];
-    // AFIP CSV has header with "Fecha de Emisión" or "Tipo de Comprobante"
-    if (firstLine.toLowerCase().includes('tipo de comprobante') || 
-        firstLine.toLowerCase().includes('fecha de emisi')) {
-        return { rows: parseAfipCsv(text), source: 'ARCA/AFIP CSV' };
-    }
-    // MisComprobantes: first line has dd/mm/yyyy pattern directly
-    if (/^\d{2}\/\d{2}\/\d{4}/.test(firstLine.trim())) {
-        return { rows: parseMisComprobantes(text), source: 'Mis Comprobantes TXT' };
-    }
-    // Try AFIP anyway (might have different header)
-    try { return { rows: parseAfipCsv(text), source: 'ARCA/AFIP CSV' }; } catch(e) {}
-    // Try MisComprobantes
-    try { return { rows: parseMisComprobantes(text), source: 'Mis Comprobantes TXT' }; } catch(e) {}
-    throw new Error('No se pudo detectar el formato del archivo. Verificá que sea un CSV de ARCA o el TXT de Mis Comprobantes.');
-}
+        document.getElementById('input-afip').onchange = e => {
+            if (e.target.files[0]) readFile(e.target.files[0], 'zone-afip', 'info-afip', 'afip');
+        };
+        document.getElementById('input-txt').onchange = e => {
+            if (e.target.files[0]) readFile(e.target.files[0], 'zone-txt', 'info-txt', 'txt');
+        };
 
-/* ─────────────────────────────────────────────
-   GENERADOR TXT FINAL
-───────────────────────────────────────────── */
-function generateTxt(rows) {
-    return rows.map(r => buildLine(r)).join('\r\n');
-}
+        function copyTxt() {
+            if (!generatedTxt) return;
+            navigator.clipboard.writeText(generatedTxt).then(() => showAlert('Copiado al portapapeles', 'success'));
+        }
 
-/* ─────────────────────────────────────────────
-   VALIDACIONES
-───────────────────────────────────────────── */
-function validateTxt(txt, rows) {
-    const lines = txt.split(/\r?\n/).filter(l => l.trim() !== '');
-    const checks = [];
-
-    // 1. Sin encabezado
-    const firstLine = lines[0] || '';
-    const startsWithDate = /^\d{2}\/\d{2}\/\d{4}/.test(firstLine);
-    checks.push({ rule: 'Sin encabezado', expected: 'Primera línea = datos', result: startsWithDate ? 'OK' : 'Tiene encabezado', ok: startsWithDate });
-
-    // 2. Cantidad de líneas
-    checks.push({ rule: 'Líneas totales', expected: `${rows.length}`, result: `${lines.length}`, ok: lines.length === rows.length });
-
-    // 3. Campos por línea = 26 (25 ; + trailing)
-    const wrongFields = lines.filter(l => l.split(';').length !== 26);
-    checks.push({ rule: 'Campos por línea = 26', expected: '26 en todas', result: wrongFields.length === 0 ? '26 en todas ✓' : `${wrongFields.length} líneas con campo incorrecto`, ok: wrongFields.length === 0 });
-
-    // 4. Decimal con punto
-    const hasComma = lines.some(l => {
-        const f = l.split(';');
-        return /,\d{2}$/.test(f[7]) || /,\d{2}$/.test(f[8]);
-    });
-    checks.push({ rule: 'Decimal con punto', expected: '906000.0', result: hasComma ? 'Se encontró coma como decimal ✗' : 'Punto decimal ✓', ok: !hasComma });
-
-    // 5. Moneda = ARS
-    const wrongMoneda = lines.filter(l => l.split(';')[6] !== 'ARS');
-    checks.push({ rule: 'Moneda = ARS', expected: 'ARS', result: wrongMoneda.length === 0 ? 'ARS en todas ✓' : `${wrongMoneda.length} líneas con moneda distinta`, ok: wrongMoneda.length === 0 });
-
-    // 6. Trailing semicolon
-    const noTrailing = lines.filter(l => !l.endsWith(';'));
-    checks.push({ rule: 'Trailing semicolon', expected: 'Cada línea termina en ;', result: noTrailing.length === 0 ? 'OK ✓' : `${noTrailing.length} líneas sin trailing ;`, ok: noTrailing.length === 0 });
-
-    // 7. Fechas DD/MM/YYYY
-    const wrongDate = lines.filter(l => !/^\d{2}\/\d{2}\/\d{4}/.test(l));
-    checks.push({ rule: 'Fechas DD/MM/YYYY', expected: '22/03/2026', result: wrongDate.length === 0 ? 'Formato correcto ✓' : `${wrongDate.length} líneas con fecha incorrecta`, ok: wrongDate.length === 0 });
-
-    // 8. NUMERO_FAC formato XXXX-YYYYYYYY
-    const wrongNum = lines.filter(l => {
-        const f = l.split(';');
-        return !/^\d{4}-\d{8}$/.test(f[4]);
-    });
-    checks.push({ rule: 'NUMERO_FAC XXXX-YYYYYYYY', expected: '0064-00004904', result: wrongNum.length === 0 ? 'Formato correcto ✓' : `${wrongNum.length} con formato incorrecto`, ok: wrongNum.length === 0 });
-
-    return checks;
-}
-
-/* ─────────────────────────────────────────────
-   UI HELPERS
-───────────────────────────────────────────── */
-function showAlert(msg, type = 'success') {
-    const el = document.createElement('div');
-    el.className = `alert alert-${type}`;
-    el.innerHTML = `<span>${type === 'success' ? '✓' : type === 'warn' ? '⚠' : '✗'}</span><span>${msg}</span>`;
-    const container = document.getElementById('alert-container');
-    container.appendChild(el);
-    setTimeout(() => el.remove(), 6000);
-}
-
-function togglePanel(headerEl) {
-    const body = headerEl.nextElementSibling;
-    const toggle = headerEl.querySelector('.panel-toggle');
-    const collapsed = body.classList.toggle('collapsed');
-    toggle.textContent = collapsed ? '▼ Ver' : '▲ Ocultar';
-}
-
-function updateStats(rows) {
-    const fac = rows.filter(r => r.tipo === 'FAC').length;
-    const nc  = rows.filter(r => r.tipo === 'NC' || r.tipo === 'ND').length;
-    const total = rows.reduce((s, r) => s + r.monto, 0);
-    document.getElementById('s-facturas').textContent = fac;
-    document.getElementById('s-nc').textContent = nc;
-    document.getElementById('s-total').textContent = '$' + total.toLocaleString('es-AR', { maximumFractionDigits: 2 });
-    document.getElementById('s-lineas').textContent = rows.length;
-    document.getElementById('stats-bar').classList.remove('hidden');
-}
-
-function renderValidations(checks) {
-    const tbody = document.getElementById('val-body');
-    tbody.innerHTML = checks.map(c => `
-        <tr>
-            <td>${c.rule}</td>
-            <td><code>${c.expected}</code></td>
-            <td><code>${c.result}</code></td>
-            <td class="${c.ok ? 'ok' : 'fail'}">${c.ok ? '✅ OK' : '❌ ERROR'}</td>
-        </tr>
-    `).join('');
-    document.getElementById('val-panel').classList.remove('hidden');
-}
-
-function renderPreview(txt) {
-    const lines = txt.split(/\r?\n/);
-    const maxShow = 40;
-    const shown = lines.slice(0, maxShow);
-    const previewEl = document.getElementById('preview-code');
-    previewEl.innerHTML = shown.map((l, i) =>
-        `<span class="preview-line-num">${(i+1).toString().padStart(3,' ')}</span>${escHtml(l)}`
-    ).join('\n') + (lines.length > maxShow ? `\n<span style="color:var(--muted)">     … y ${lines.length - maxShow} líneas más</span>` : '');
-    document.getElementById('preview-wrap').classList.remove('hidden');
-}
-
-function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-/* ─────────────────────────────────────────────
-   PROCESS FILE
-───────────────────────────────────────────── */
-function processFile(text, filename) {
-    try {
-        const { rows, source } = detectAndParse(text, filename);
-        parsedRows = rows;
-        generatedTxt = generateTxt(rows);
-
-        updateStats(rows);
-
-        const checks = validateTxt(generatedTxt, rows);
-        renderValidations(checks);
-        renderPreview(generatedTxt);
-
-        const allOk = checks.every(c => c.ok);
-        showAlert(`✅ ${rows.length} registros procesados desde "${source}". ${allOk ? 'Todas las validaciones OK.' : 'Hay advertencias — revisá el panel de validaciones.'}`, allOk ? 'success' : 'warn');
-
-    } catch(e) {
-        showAlert(e.message, 'error');
-    }
-}
-
-function readFile(file, zoneId, infoId, type) {
-    const reader = new FileReader();
-    reader.onload = e => {
-        document.getElementById(zoneId).classList.add('loaded');
-        document.getElementById(infoId).textContent = `✓ ${file.name}`;
-        processFile(e.target.result, file.name);
-    };
-    reader.onerror = () => showAlert('Error al leer el archivo.', 'error');
-    reader.readAsText(file, 'UTF-8');
-}
-
-/* ─────────────────────────────────────────────
-   DRAG & DROP / INPUT EVENTS
-───────────────────────────────────────────── */
-function onDragOver(e, zoneId) {
-    e.preventDefault();
-    document.getElementById(zoneId).classList.add('drag-over');
-}
-function onDragLeave(zoneId) {
-    document.getElementById(zoneId).classList.remove('drag-over');
-}
-function onDrop(e, type) {
-    e.preventDefault();
-    const zoneId = `zone-${type}`;
-    const infoId = `info-${type}`;
-    document.getElementById(zoneId).classList.remove('drag-over');
-    const file = e.dataTransfer.files[0];
-    if (file) readFile(file, zoneId, infoId, type);
-}
-
-document.getElementById('input-afip').onchange = e => {
-    if (e.target.files[0]) readFile(e.target.files[0], 'zone-afip', 'info-afip', 'afip');
-};
-document.getElementById('input-txt').onchange = e => {
-    if (e.target.files[0]) readFile(e.target.files[0], 'zone-txt', 'info-txt', 'txt');
-};
-
-/* ─────────────────────────────────────────────
-   EXPORT
-───────────────────────────────────────────── */
-function copyTxt() {
-    if (!generatedTxt) return;
-    navigator.clipboard.writeText(generatedTxt).then(() => showAlert('Copiado al portapapeles', 'success'));
-}
-
-function downloadTxt() {
-    if (!generatedTxt) return;
-    // Use CRLF line endings to match FACTURAS.TXT exactly
-    const blob = new Blob([generatedTxt], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'FACTURAS.TXT';
-    a.click();
-    URL.revokeObjectURL(url);
-    showAlert('Archivo FACTURAS.TXT descargado', 'success');
-}
-</script>
+        function downloadTxt() {
+            if (!generatedTxt) return;
+            const blob = new Blob([generatedTxt], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'FACTURAS.TXT';
+            a.click();
+            URL.revokeObjectURL(url);
+            showAlert('Archivo FACTURAS.TXT descargado', 'success');
+        }
+    </script>
 </body>
+
 </html>
