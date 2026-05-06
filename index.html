@@ -541,7 +541,7 @@
                 <p>Genera archivos compatibles con el importador de facturas de proveedores.<br>
                     Acepta el CSV de ARCA/AFIP o el TXT de "Mis Comprobantes Recibidos".</p>
                 <div class="badge-row">
-                    <span class="badge badge-blue">Sin encabezado</span>
+                    <span class="badge badge-blue">Con encabezado</span>
                     <span class="badge badge-blue">25 campos + trailing ;</span>
                     <span class="badge badge-green">Decimal con PUNTO</span>
                     <span class="badge badge-green">Moneda: ARS</span>
@@ -578,37 +578,43 @@
                         </div>
                         <div class="diff-item"><span class="diff-icon">✗</span>
                             <div class="diff-text">Columnas extra: <code>EsFactura</code>, <code>CodigoFactura</code>,
-                                <code>RvaOGasto</code> no existen en FACTURAS.TXT</div>
+                                <code>RvaOGasto</code> no existen en FACTURAS.TXT
+                            </div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✗</span>
                             <div class="diff-text">Campos numéricos fijos con <code>.toFixed(2)</code> →
-                                <code>0,00</code>. Deben ser entero <code>0</code></div>
+                                <code>0,00</code>. Deben ser entero <code>0</code>
+                            </div>
                         </div>
                     </div>
                     <div class="diff-col good">
                         <h4>✅ Formato correcto (FACTURAS.TXT)</h4>
                         <div class="diff-item"><span class="diff-icon">✓</span>
-                            <div class="diff-text"><strong>Con encabezado.</strong> Primera línea contiene los nombres de las columnas.
+                            <div class="diff-text"><strong>Con encabezado.</strong> Primera línea contiene los nombres
+                                de las columnas.
                             </div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
                             <div class="diff-text"><strong>1 fila por factura</strong>, 26 tokens separados por
-                                <code>;</code> (25 campos + trailing semicolon vacío).</div>
+                                <code>;</code> (25 campos + trailing semicolon vacío).
+                            </div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
                             <div class="diff-text">Decimal con <strong>punto</strong>: <code>906000.0</code>,
-                                <code>157239.67</code></div>
+                                <code>157239.67</code>
+                            </div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
                             <div class="diff-text">Moneda siempre <code>ARS</code></div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
                             <div class="diff-text">Exactamente 25 campos: FECHA; COD_OPER; LETRA; TIPO; NUMERO_FAC; RVA;
-                                MONEDA; MONTO; GRAVADO21; …12 ceros…; DESCRIP; …9 ceros… ;</div>
+                                MONEDA; MONTO; IVATASA1; IVATASA2; PLANNING; CENTROCOSTO; CUENTA; DESCRIP; IVA_GAS_105; IVATASA27; RETENIB; ...; EXENTO;
+                            </div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
-                            <div class="diff-text">Valores cero se escriben como <code>0</code> (no <code>0.0</code> ni
-                                <code>0,00</code>). Montos con punto decimal natural.</div>
+                            <div class="diff-text">Formatos AFIP: Detecta <code>IVA 21%</code>, <code>Otros Tributos</code> (como RetenIB), y Percepciones.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -860,16 +866,21 @@
             const headerRaw = lines[0].split(';').map(c => c.replace(/"/g, '').trim().toLowerCase());
             const idx = {
                 fecha: headerRaw.findIndex(h => h.includes('fecha')),
-                tipo: headerRaw.findIndex(h => h === 'tipo de comprobante'),
+                tipo: headerRaw.findIndex(h => h.includes('tipo de comprobante') || h === 'tipo'),
                 pv: headerRaw.findIndex(h => h.includes('punto de venta')),
-                numDesde: headerRaw.findIndex(h => h.includes('número desde') || h.includes('numero desde')),
-                emisor: headerRaw.findIndex(h => h.includes('denominaci') && h.includes('emisor')),
+                numDesde: headerRaw.findIndex(h => h.includes('número desde') || h.includes('numero desde') || h.includes('nro. desde')),
+                emisor: headerRaw.findIndex(h => (h.includes('denominaci') && h.includes('emisor')) || h.includes('nombre emisor')),
                 iva21: headerRaw.findIndex(h => h === 'iva 21%'),
                 iva105: headerRaw.findIndex(h => h === 'iva 10,5%'),
                 iva27: headerRaw.findIndex(h => h === 'iva 27%'),
+                iva: headerRaw.findIndex(h => h === 'iva' || h === 'importe iva'),
                 noGrav: headerRaw.findIndex(h => h.includes('neto no gravado')),
                 exento: headerRaw.findIndex(h => h.includes('op. exentas')),
-                total: headerRaw.findIndex(h => h === 'imp. total'),
+                otros: headerRaw.findIndex(h => h.includes('otros tributos') || h.includes('otros impuestos')),
+                percepIva: headerRaw.findIndex(h => h.includes('percep') && h.includes('iva')),
+                percepIb: headerRaw.findIndex(h => h.includes('percep') && (h.includes('ingresos brutos') || h.includes(' i.b.') || h.includes(' ib '))),
+                percepGanan: headerRaw.findIndex(h => h.includes('percep') && h.includes('ganancias')),
+                total: headerRaw.findIndex(h => h.includes('imp. total') || h.includes('total')),
             };
 
             if (idx.total < 0 || idx.fecha < 0) {
@@ -887,6 +898,14 @@
                 const pv = idx.pv >= 0 ? cells[idx.pv] : '0';
                 const num = idx.numDesde >= 0 ? cells[idx.numDesde] : '0';
 
+                const iva21 = idx.iva21 >= 0 ? parseNum(cells[idx.iva21]) : 0;
+                const iva105 = idx.iva105 >= 0 ? parseNum(cells[idx.iva105]) : 0;
+                const iva27 = idx.iva27 >= 0 ? parseNum(cells[idx.iva27]) : 0;
+                const ivaGral = idx.iva >= 0 ? parseNum(cells[idx.iva]) : 0;
+
+                // Si no hay IVA discriminado, usamos el general en iva21
+                const finalIva21 = (iva21 === 0 && iva105 === 0 && iva27 === 0) ? ivaGral : iva21;
+
                 rows.push({
                     fecha: fmtFecha(cells[idx.fecha]),
                     codOper: tipoInfo.cod,
@@ -894,15 +913,18 @@
                     tipo: tipoInfo.tipo,
                     numeroFac: parseInt(num).toString(),
                     monto: monto,
-                    iva21: idx.iva21 >= 0 ? parseNum(cells[idx.iva21]) : 0,
-                    iva105: idx.iva105 >= 0 ? parseNum(cells[idx.iva105]) : 0,
-                    iva27: idx.iva27 >= 0 ? parseNum(cells[idx.iva27]) : 0,
+                    iva21: finalIva21,
+                    iva105: iva105,
+                    iva27: iva27,
                     noGrav: idx.noGrav >= 0 ? parseNum(cells[idx.noGrav]) : 0,
                     exento: idx.exento >= 0 ? parseNum(cells[idx.exento]) : 0,
                     descrip: idx.emisor >= 0 ? cells[idx.emisor].replace(/"/g, '').trim() : '',
+                    retenIb: idx.otros >= 0 ? parseNum(cells[idx.otros]) : 0,
+                    percepIva: idx.percepIva >= 0 ? parseNum(cells[idx.percepIva]) : 0,
+                    percepIb: idx.percepIb >= 0 ? parseNum(cells[idx.percepIb]) : 0,
+                    percepGanan: idx.percepGanan >= 0 ? parseNum(cells[idx.percepGanan]) : 0,
                     rva: '0', moneda: 'ARS', planning: '', centroCosto: '', cuenta: '',
-                    ivaGas105: 0, retenIb: 0, retenGan: 0, retenIva: 0,
-                    percepIb: 0, percepGanan: 0, percepIva: 0, percepInt: 0
+                    ivaGas105: 0, retenGan: 0, retenIva: 0, percepInt: 0
                 });
             }
             if (rows.length === 0) throw new Error('No se encontraron facturas.');
@@ -923,15 +945,21 @@
                 const monto = parseNum(cells[7]);
                 if (!monto) continue;
 
-                const numFacRaw = cells[4].trim();
-                const numFac = numFacRaw.includes('-') ? numFacRaw.split('-')[1] : numFacRaw;
+                // Si viene de una exportación previa de este mismo tool, puede tener PV-NUM o solo NUM
+                let pv = '0';
+                let num = cells[4].trim();
+                if (num.includes('-')) {
+                    const parts = num.split('-');
+                    pv = parts[0];
+                    num = parts[1];
+                }
 
                 rows.push({
                     fecha: cells[0].trim(),
                     codOper: cells[1].trim(),
                     letra: cells[2].trim(),
                     tipo: cells[3].trim(),
-                    numeroFac: parseInt(numFac).toString(),
+                    numeroFac: parseInt(num).toString(),
                     monto: monto,
                     iva21: parseNum(cells[8]),
                     iva105: parseNum(cells[9]),
@@ -1012,11 +1040,7 @@
             checks.push({ rule: 'Trailing semicolon', expected: 'Cada línea termina en ;', result: noTrailing.length === 0 ? 'OK ✓' : `${noTrailing.length} líneas sin trailing ;`, ok: noTrailing.length === 0 });
             const wrongDate = lines.filter(l => !/^\d{2}\/\d{2}\/\d{4}/.test(l));
             checks.push({ rule: 'Fechas DD/MM/YYYY', expected: '22/03/2026', result: wrongDate.length === 0 ? 'Formato correcto ✓' : `${wrongDate.length} líneas con fecha incorrecta`, ok: wrongDate.length === 0 });
-            const wrongNum = lines.filter(l => {
-                const f = l.split(';');
-                return !/^\d{4}-\d{8}$/.test(f[4]);
-            });
-            checks.push({ rule: 'NUMERO_FAC XXXX-YYYYYYYY', expected: '0064-00004904', result: wrongNum.length === 0 ? 'Formato correcto ✓' : `${wrongNum.length} con formato incorrecto`, ok: wrongNum.length === 0 });
+
             return checks;
         }
 
