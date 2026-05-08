@@ -609,11 +609,13 @@
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
                             <div class="diff-text">Exactamente 25 campos: FECHA; COD_OPER; LETRA; TIPO; NUMERO_FAC; RVA;
-                                MONEDA; MONTO; IVATASA1; IVATASA2; PLANNING; CENTROCOSTO; CUENTA; DESCRIP; IVA_GAS_105; IVATASA27; RETENIB; ...; EXENTO;
+                                MONEDA; MONTO; IVATASA1; IVATASA2; PLANNING; CENTROCOSTO; CUENTA; DESCRIP; IVA_GAS_105;
+                                IVATASA27; RETENIB; ...; EXENTO;
                             </div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
-                            <div class="diff-text">Formatos AFIP: Detecta <code>IVA 21%</code>, <code>Otros Tributos</code> (como RetenIB), y Percepciones.
+                            <div class="diff-text">Formatos AFIP: Detecta <code>IVA 21%</code>,
+                                <code>Otros Tributos</code> (como RetenIB), y Percepciones.
                             </div>
                         </div>
                     </div>
@@ -826,7 +828,7 @@
             [25] (vacío — trailing semicolon)
         ───────────────────────────────────────────── */
         function buildLine(row) {
-            const fields = new Array(26).fill('0');
+            const fields = new Array(27).fill('0');
             fields[0] = row.fecha || "";
             fields[1] = row.codOper || "";
             fields[2] = row.letra || "";
@@ -852,7 +854,8 @@
             fields[22] = fmtNum(row.percepInt);
             fields[23] = fmtNum(row.noGrav);
             fields[24] = fmtNum(row.exento);
-            fields[25] = '';
+            fields[25] = row.cuit || "";
+            fields[26] = '';
             return fields.join(';');
         }
 
@@ -873,13 +876,11 @@
                 iva21: headerRaw.findIndex(h => h === 'iva 21%'),
                 iva105: headerRaw.findIndex(h => h === 'iva 10,5%'),
                 iva27: headerRaw.findIndex(h => h === 'iva 27%'),
-                iva: headerRaw.findIndex(h => h === 'iva' || h === 'importe iva'),
+                ivaGral: headerRaw.findIndex(h => h === 'total iva' || h === 'iva' || h === 'importe iva'),
                 noGrav: headerRaw.findIndex(h => h.includes('neto no gravado')),
                 exento: headerRaw.findIndex(h => h.includes('op. exentas')),
                 otros: headerRaw.findIndex(h => h.includes('otros tributos') || h.includes('otros impuestos')),
-                percepIva: headerRaw.findIndex(h => h.includes('percep') && h.includes('iva')),
-                percepIb: headerRaw.findIndex(h => h.includes('percep') && (h.includes('ingresos brutos') || h.includes(' i.b.') || h.includes(' ib '))),
-                percepGanan: headerRaw.findIndex(h => h.includes('percep') && h.includes('ganancias')),
+                cuit: headerRaw.findIndex(h => h.includes('nro. doc. emisor') || h.includes('cuit emisor')),
                 total: headerRaw.findIndex(h => h.includes('imp. total') || h.includes('total')),
             };
 
@@ -901,10 +902,12 @@
                 const iva21 = idx.iva21 >= 0 ? parseNum(cells[idx.iva21]) : 0;
                 const iva105 = idx.iva105 >= 0 ? parseNum(cells[idx.iva105]) : 0;
                 const iva27 = idx.iva27 >= 0 ? parseNum(cells[idx.iva27]) : 0;
-                const ivaGral = idx.iva >= 0 ? parseNum(cells[idx.iva]) : 0;
+                const ivaGral = idx.ivaGral >= 0 ? parseNum(cells[idx.ivaGral]) : 0;
 
                 // Si no hay IVA discriminado, usamos el general en iva21
                 const finalIva21 = (iva21 === 0 && iva105 === 0 && iva27 === 0) ? ivaGral : iva21;
+
+                const emisorCuit = idx.cuit >= 0 ? cells[idx.cuit].replace(/[^\d]/g, '') : '';
 
                 rows.push({
                     fecha: fmtFecha(cells[idx.fecha]),
@@ -920,11 +923,9 @@
                     exento: idx.exento >= 0 ? parseNum(cells[idx.exento]) : 0,
                     descrip: idx.emisor >= 0 ? cells[idx.emisor].replace(/"/g, '').trim() : '',
                     retenIb: idx.otros >= 0 ? parseNum(cells[idx.otros]) : 0,
-                    percepIva: idx.percepIva >= 0 ? parseNum(cells[idx.percepIva]) : 0,
-                    percepIb: idx.percepIb >= 0 ? parseNum(cells[idx.percepIb]) : 0,
-                    percepGanan: idx.percepGanan >= 0 ? parseNum(cells[idx.percepGanan]) : 0,
+                    cuit: emisorCuit,
                     rva: '0', moneda: 'ARS', planning: '', centroCosto: '', cuenta: '',
-                    ivaGas105: 0, retenGan: 0, retenIva: 0, percepInt: 0
+                    ivaGas105: 0, retenGan: 0, retenIva: 0, percepIb: 0, percepGanan: 0, percepIva: 0, percepInt: 0
                 });
             }
             if (rows.length === 0) throw new Error('No se encontraron facturas.');
@@ -974,6 +975,7 @@
                     ivaGas105: parseNum(cells[14]),
                     iva27: parseNum(cells[15]),
                     retenIb: parseNum(cells[16]),
+                    cuit: cells[7] ? cells[7].trim().replace(/[^\d]/g, '') : '',
                     retenGan: parseNum(cells[17]),
                     retenIva: parseNum(cells[18]),
                     percepIb: parseNum(cells[19]),
@@ -1014,7 +1016,7 @@
         }
 
         function generateTxt(rows) {
-            const header = 'FECHA;COD_OPER;LETRA;TIPO;NUMERO_FAC;RVA;MONEDA;MONTO;IVATASA1;IVATASA2;PLANNING;CENTROCOSTO;CUENTA;DESCRIP;IVA_GAS_105;IVATASA27;RETENIB;RETENGAN;RETENIVA;PERCEP_IB;PERCEP_GANAN;PERCEP_IVA;PERCEP_INT;NO_GRAVADO;EXENTO;';
+            const header = 'FECHA;COD_OPER;LETRA;TIPO;NUMERO_FAC;RVA;MONEDA;MONTO;IVATASA1;IVATASA2;PLANNING;CENTROCOSTO;CUENTA;DESCRIP;IVA_GAS_105;IVATASA27;RETENIB;RETENGAN;RETENIVA;PERCEP_IB;PERCEP_GANAN;PERCEP_IVA;PERCEP_INT;NO_GRAVADO;EXENTO;CUIT;';
             const dataLines = rows.map(r => buildLine(r)).join('\r\n');
             return header + '\r\n' + dataLines;
         }
@@ -1169,3 +1171,6 @@
 </body>
 
 </html>
+apps-fileview.texmex_20260501.02_p0
+index.html
+Mostrando index.html.
