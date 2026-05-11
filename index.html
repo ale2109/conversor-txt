@@ -1,3 +1,37 @@
+Ninguno seleccionado 
+
+Ir al contenido
+Uso de Gmail con lectores de pantalla
+
+3 de 7.231
+conversor
+Recibidos
+Resumir este correo
+
+Luis Alejandro Ariel Galarza
+Archivos adjuntos
+mié, 6 may, 15:50 (hace 5 días)
+ 
+9
+
+Mariano Antonsich
+Archivos adjuntos
+16:35 (hace 2 horas)
+Ale, buenas. Te envio reporte para listar las facturas con pagos parciales/o sin pagos. (Con saldo pendiente de pago y indicador de atraso pedido por Paola)
+
+Mariano Antonsich
+Archivos adjuntos
+18:07 (hace 59 minutos)
+para mí
+
+Ale, buenas tardes, te envio el index actualizado del conversor. Recordar utilizar el nuevo importador fac_prov_cuenca.
+--
+
+ Un archivo adjunto
+  •  Analizados por Gmail
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -876,12 +910,14 @@
                 iva21: headerRaw.findIndex(h => h === 'iva 21%'),
                 iva105: headerRaw.findIndex(h => h === 'iva 10,5%'),
                 iva27: headerRaw.findIndex(h => h === 'iva 27%'),
-                ivaGral: headerRaw.findIndex(h => h === 'total iva' || h === 'iva' || h === 'importe iva'),
+                // Exactamente 'total iva' — no confundir con 'imp. total'
+                ivaGral: headerRaw.findIndex(h => h === 'total iva'),
                 noGrav: headerRaw.findIndex(h => h.includes('neto no gravado')),
                 exento: headerRaw.findIndex(h => h.includes('op. exentas')),
                 otros: headerRaw.findIndex(h => h.includes('otros tributos') || h.includes('otros impuestos')),
                 cuit: headerRaw.findIndex(h => h.includes('nro. doc. emisor') || h.includes('cuit emisor')),
-                total: headerRaw.findIndex(h => h.includes('imp. total') || h.includes('total')),
+                // Exactamente 'imp. total' — el campo con el importe final de la factura
+                total: headerRaw.findIndex(h => h === 'imp. total'),
             };
 
             if (idx.total < 0 || idx.fecha < 0) {
@@ -904,7 +940,7 @@
                 const iva27 = idx.iva27 >= 0 ? parseNum(cells[idx.iva27]) : 0;
                 const ivaGral = idx.ivaGral >= 0 ? parseNum(cells[idx.ivaGral]) : 0;
 
-                // Si no hay IVA discriminado, usamos el general en iva21
+                // Fallback: si no hay ninguna tasa discriminada, usar Total IVA en iva21
                 const finalIva21 = (iva21 === 0 && iva105 === 0 && iva27 === 0) ? ivaGral : iva21;
 
                 const emisorCuit = idx.cuit >= 0 ? cells[idx.cuit].replace(/[^\d]/g, '') : '';
@@ -1172,5 +1208,7 @@
 
 </html>
 apps-fileview.texmex_20260501.02_p0
+index.html
+Mostrando index.html.
 index.html
 Mostrando index.html.
