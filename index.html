@@ -542,10 +542,18 @@
                     Acepta el CSV de ARCA/AFIP o el TXT de "Mis Comprobantes Recibidos".</p>
                 <div class="badge-row">
                     <span class="badge badge-blue">Con encabezado</span>
-                    <span class="badge badge-blue">25 campos + trailing ;</span>
+                    <span class="badge badge-blue">27 campos + trailing ;</span>
                     <span class="badge badge-green">Decimal con PUNTO</span>
                     <span class="badge badge-green">Moneda: ARS</span>
                     <span class="badge badge-orange">1 fila por factura</span>
+                </div>
+                <div class="empresa-selector-container" style="margin-top: 15px;">
+                    <label for="empresaSelector" style="font-weight: bold;">Empresa destino:</label>
+                    <select id="empresaSelector" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+                        <option value="DURAN">DURAN</option>
+                        <option value="FOREST">FOREST</option>
+                        <option value="SASS">SASS</option>
+                    </select>
                 </div>
             </div>
         </header>
@@ -595,8 +603,8 @@
                             </div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
-                            <div class="diff-text"><strong>1 fila por factura</strong>, 26 tokens separados por
-                                <code>;</code> (25 campos + trailing semicolon vacío).
+                            <div class="diff-text"><strong>1 fila por factura</strong>, 27 tokens separados por
+                                <code>;</code> (27 campos + trailing semicolon vacío).
                             </div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
@@ -608,9 +616,9 @@
                             <div class="diff-text">Moneda siempre <code>ARS</code></div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
-                            <div class="diff-text">Exactamente 25 campos: FECHA; COD_OPER; LETRA; TIPO; NUMERO_FAC; RVA;
+                            <div class="diff-text">Exactamente 27 campos: FECHA; COD_OPER; LETRA; TIPO; NUMERO_FAC; RVA;
                                 MONEDA; MONTO; IVATASA1; IVATASA2; PLANNING; CENTROCOSTO; CUENTA; DESCRIP; IVA_GAS_105;
-                                IVATASA27; RETENIB; ...; EXENTO;
+                                IVATASA27; RETENIB; ...; EXENTO; CUIT; EMPRESA;
                             </div>
                         </div>
                         <div class="diff-item"><span class="diff-icon">✓</span>
@@ -767,7 +775,7 @@
         function fmtNumFac(pv, num) {
             const pvStr = String(pv).trim().padStart(4, '0');
             const numStr = String(num).trim().padStart(8, '0');
-            return `${pvStr}-${numStr}`;
+            return `${pvStr}${numStr}`;
         }
 
         function mapTipoComprobante(tipoAfip) {
@@ -783,6 +791,10 @@
                 12: { cod: '2', tipo: 'ND', letra: 'C' },
                 13: { cod: '3', tipo: 'NC', letra: 'C' },
                 // Factura M
+                51: { cod: '1', tipo: 'FAC', letra: 'M' },
+                52: { cod: '2', tipo: 'ND', letra: 'M' },
+                53: { cod: '3', tipo: 'NC', letra: 'M' },
+                // Factura T
                 195: { cod: '1', tipo: 'FAC', letra: 'T' },
                 196: { cod: '2', tipo: 'ND', letra: 'T' },
                 197: { cod: '3', tipo: 'NC', letra: 'T' },
@@ -797,8 +809,7 @@
 
         /* ─────────────────────────────────────────────
            CONSTRUCCIÓN DE LÍNEA FINAL
-           Formato: 26 tokens separados por ';'
-           Pos 0-24 = campos, pos 25 = vacío (trailing ;)
+           Formato: 28 tokens separados por ';'
            
             [0]  FECHA (texto)
             [1]  COD_OPER (texto)
@@ -825,10 +836,12 @@
             [22] PERCEP_INT (numero)
             [23] NO_GRAVADO (numero)
             [24] EXENTO (numero)
-            [25] (vacío — trailing semicolon)
+            [25] CUIT (texto)
+            [26] EMPRESA (texto)
+            [27] (vacío — trailing semicolon)
         ───────────────────────────────────────────── */
         function buildLine(row) {
-            const fields = new Array(27).fill('0');
+            const fields = new Array(28).fill('0');
             fields[0] = row.fecha || "";
             fields[1] = row.codOper || "";
             fields[2] = row.letra || "";
@@ -855,7 +868,8 @@
             fields[23] = fmtNum(row.noGrav);
             fields[24] = fmtNum(row.exento);
             fields[25] = row.cuit || "";
-            fields[26] = '';
+            fields[26] = document.getElementById('empresaSelector').value || "DURAN";
+            fields[27] = '';
             return fields.join(';');
         }
 
@@ -916,7 +930,7 @@
                     codOper: tipoInfo.cod,
                     letra: tipoInfo.letra,
                     tipo: tipoInfo.tipo,
-                    numeroFac: parseInt(num).toString(),
+                    numeroFac: fmtNumFac(pv, num),
                     monto: monto,
                     iva21: finalIva21,
                     iva105: iva105,
