@@ -773,72 +773,42 @@
         }
 
         function fmtNumFac(pv, num) {
-            const pvStr = String(pv).trim().padStart(4, '0');
+            const pvStr = String(pv).trim().padStart(5, '0');
             const numStr = String(num).trim().padStart(8, '0');
-            return `${pvStr}${numStr}`;
+            return `${pvStr}-${numStr}`;
         }
 
         function mapTipoComprobante(tipoAfip) {
             const t = parseInt(String(tipoAfip).trim());
             const map = {
-                1: { cod: '1', tipo: 'FAC', letra: 'A' },
-                2: { cod: '2', tipo: 'ND', letra: 'A' },
-                3: { cod: '3', tipo: 'NC', letra: 'A' },
-                6: { cod: '1', tipo: 'FAC', letra: 'B' },
-                7: { cod: '2', tipo: 'ND', letra: 'B' },
-                8: { cod: '3', tipo: 'NC', letra: 'B' },
-                11: { cod: '1', tipo: 'FAC', letra: 'C' },
-                12: { cod: '2', tipo: 'ND', letra: 'C' },
-                13: { cod: '3', tipo: 'NC', letra: 'C' },
+                1: { cod: '1', tipo: 'FCC', letra: 'A' },
+                2: { cod: '2', tipo: 'NDD', letra: 'A' },
+                3: { cod: '3', tipo: 'NCC', letra: 'A' },
+                6: { cod: '1', tipo: 'FCC', letra: 'B' },
+                7: { cod: '2', tipo: 'NDD', letra: 'B' },
+                8: { cod: '3', tipo: 'NCC', letra: 'B' },
+                11: { cod: '1', tipo: 'FCC', letra: 'C' },
+                12: { cod: '2', tipo: 'NDD', letra: 'C' },
+                13: { cod: '3', tipo: 'NCC', letra: 'C' },
                 // Factura M
-                51: { cod: '1', tipo: 'FAC', letra: 'M' },
-                52: { cod: '2', tipo: 'ND', letra: 'M' },
-                53: { cod: '3', tipo: 'NC', letra: 'M' },
+                51: { cod: '1', tipo: 'FCC', letra: 'M' },
+                52: { cod: '2', tipo: 'NDD', letra: 'M' },
+                53: { cod: '3', tipo: 'NCC', letra: 'M' },
                 // Factura T
-                195: { cod: '1', tipo: 'FAC', letra: 'T' },
-                196: { cod: '2', tipo: 'ND', letra: 'T' },
-                197: { cod: '3', tipo: 'NC', letra: 'T' },
+                195: { cod: '1', tipo: 'FCC', letra: 'T' },
+                196: { cod: '2', tipo: 'NDD', letra: 'T' },
+                197: { cod: '3', tipo: 'NCC', letra: 'T' },
                 // Factura de Crédito Electrónica MiPyMEs (FCE)
-                201: { cod: '1', tipo: 'FAC', letra: 'A' },
-                202: { cod: '2', tipo: 'ND', letra: 'A' },
-                203: { cod: '3', tipo: 'NC', letra: 'A' },
-                211: { cod: '1', tipo: 'FAC', letra: 'C' },
+                201: { cod: '1', tipo: 'FCC', letra: 'A' },
+                202: { cod: '2', tipo: 'NDD', letra: 'A' },
+                203: { cod: '3', tipo: 'NCC', letra: 'A' },
+                211: { cod: '1', tipo: 'FCC', letra: 'C' },
             };
-            return map[t] || { cod: '1', tipo: 'FAC', letra: 'A' };
+            return map[t] || { cod: '1', tipo: 'FCC', letra: 'A' };
         }
 
         /* ─────────────────────────────────────────────
            CONSTRUCCIÓN DE LÍNEA FINAL
-           Formato: 28 tokens separados por ';'
-           
-            [0]  FECHA (texto)
-            [1]  COD_OPER (texto)
-            [2]  LETRA (texto)
-            [3]  TIPO (texto)
-            [4]  NUMERO_FAC (texto)
-            [5]  RVA (texto)
-            [6]  MONEDA (texto)
-            [7]  MONTO (numero)
-            [8]  IVATASA1 (numero)
-            [9]  IVATASA2 (numero)
-            [10] PLANNING (texto)
-            [11] CENTROCOSTO (texto)
-            [12] CUENTA (texto)
-            [13] DESCRIP (texto)
-            [14] IVA_GAS_105 (numero)
-            [15] IVATASA27 (numero)
-            [16] RETENIB (numero)
-            [17] RETENGAN (numero)
-            [18] RETENIVA (numero)
-            [19] PERCEP_IB (numero)
-            [20] PERCEP_GANAN (numero)
-            [21] PERCEP_IVA (numero)
-            [22] PERCEP_INT (numero)
-            [23] NO_GRAVADO (numero)
-            [24] EXENTO (numero)
-            [25] CUIT (texto)
-            [26] EMPRESA (texto)
-            [27] (vacío — trailing semicolon)
         ───────────────────────────────────────────── */
         function buildLine(row) {
             const fields = new Array(28).fill('0');
@@ -848,7 +818,7 @@
             fields[3] = row.tipo || "";
             fields[4] = row.numeroFac || "";
             fields[5] = row.rva || "0";
-            fields[6] = row.moneda || "ARS";
+            fields[6] = row.moneda && row.moneda.trim() !== '' ? row.moneda.trim() : 'ARS';
             fields[7] = fmtNum(row.monto);
             fields[8] = fmtNum(row.iva21);
             fields[9] = fmtNum(row.iva105);
@@ -890,14 +860,13 @@
                 iva21: headerRaw.findIndex(h => h === 'iva 21%'),
                 iva105: headerRaw.findIndex(h => h === 'iva 10,5%'),
                 iva27: headerRaw.findIndex(h => h === 'iva 27%'),
-                // Exactamente 'total iva' — no confundir con 'imp. total'
                 ivaGral: headerRaw.findIndex(h => h === 'total iva'),
                 noGrav: headerRaw.findIndex(h => h.includes('neto no gravado')),
                 exento: headerRaw.findIndex(h => h.includes('op. exentas')),
                 otros: headerRaw.findIndex(h => h.includes('otros tributos') || h.includes('otros impuestos')),
                 cuit: headerRaw.findIndex(h => h.includes('nro. doc. emisor') || h.includes('cuit emisor')),
-                // Exactamente 'imp. total' — el campo con el importe final de la factura
                 total: headerRaw.findIndex(h => h === 'imp. total'),
+                moneda: headerRaw.findIndex(h => h === 'moneda'),
             };
 
             if (idx.total < 0 || idx.fecha < 0) {
@@ -914,13 +883,13 @@
                 const tipoInfo = mapTipoComprobante(cells[idx.tipo]);
                 const pv = idx.pv >= 0 ? cells[idx.pv] : '0';
                 const num = idx.numDesde >= 0 ? cells[idx.numDesde] : '0';
+                const moneda = idx.moneda >= 0 ? cells[idx.moneda] : 'ARS';
 
                 const iva21 = idx.iva21 >= 0 ? parseNum(cells[idx.iva21]) : 0;
                 const iva105 = idx.iva105 >= 0 ? parseNum(cells[idx.iva105]) : 0;
                 const iva27 = idx.iva27 >= 0 ? parseNum(cells[idx.iva27]) : 0;
                 const ivaGral = idx.ivaGral >= 0 ? parseNum(cells[idx.ivaGral]) : 0;
 
-                // Fallback: si no hay ninguna tasa discriminada, usar Total IVA en iva21
                 const finalIva21 = (iva21 === 0 && iva105 === 0 && iva27 === 0) ? ivaGral : iva21;
 
                 const emisorCuit = idx.cuit >= 0 ? cells[idx.cuit].replace(/[^\d]/g, '') : '';
@@ -932,6 +901,7 @@
                     tipo: tipoInfo.tipo,
                     numeroFac: fmtNumFac(pv, num),
                     monto: monto,
+                    moneda: moneda,
                     iva21: finalIva21,
                     iva105: iva105,
                     iva27: iva27,
