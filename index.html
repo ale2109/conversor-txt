@@ -773,9 +773,9 @@
         }
 
         function fmtNumFac(pv, num) {
-            const pvStr = String(pv).trim().padStart(5, '0');
+            const pvStr = String(pv).trim().padStart(4, '0');
             const numStr = String(num).trim().padStart(8, '0');
-            return `${pvStr}-${numStr}`;
+            return `${pvStr}${numStr}`;
         }
 
         function mapTipoComprobante(tipoAfip) {
